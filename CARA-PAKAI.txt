@@ -1,0 +1,24 @@
+CARA PAKAI SINGKAT
+1. Taruh file: assets/photos/foto1.jpg, assets/video/video1.mp4, assets/music/lagu1.mp3 (nomor 1-9).
+2. Ikuti PANDUAN-ADMIN.txt untuk menghubungkan Google Sheet (isi sheetUrl di config.js).
+3. Upload seluruh folder ke Netlify.
+4. Buka /admin.html untuk mengatur semuanya. Bagikan /kirim.html ke teman. Link kejutan: halaman utama.
+Link khusus (opsional): ?nama=Siti&dari=Ibu&tema=cream&lagu=2 mengganti sementara tampilan tanpa lewat admin.
+Tes di komputer sendiri: buka folder uji-lokal (di luar folder ulangtahun), jalankan START_LOCAL.bat.
+Hanya folder "ulangtahun" yang diunggah ke Netlify.
+
+
+FITUR BARU
+- Form kirim ucapan menyediakan tombol rekam suara. Izinkan akses mikrofon, rekam, dengarkan pratinjau, lalu kirim.
+- Rekaman disimpan ke Google Drive dan akan ikut tampil bersama foto/nama/pesan teman. Musik latar otomatis mengecil selama audio ucapan diputar.
+- Setelah mengubah google-sheet/Code.gs, deploy Apps Script sebagai New version.
+
+PEMBARUAN (WAJIB: deploy ulang Code.gs)
+- Suara ucapan sekarang diambil lewat Apps Script lalu diputar dari memori browser, jadi tidak lagi
+  terblokir oleh Google Drive. Rekaman otomatis diubah ke WAV sehingga bisa diputar di iPhone dan Android.
+- Maksimal rekaman 45 detik. Jika suara gagal otomatis terputar (kebijakan browser), muncul tombol "Ketuk untuk memutar suara".
+- Tampilan baru bergaya mewah: debu emas, bingkai emas, kartu kaca. Admin punya statistik dan tombol putar suara.
+- Langkah: salin seluruh google-sheet/Code.gs yang baru ke Apps Script (SANDI_ADMIN tetap isi Anda),
+  Deploy -> Manage deployments -> Edit -> Version: New version -> Deploy. Lalu unggah ulang folder ulangtahun.
+- Rekaman lama berformat webm tetap tersimpan; di Android/Chrome/desktop bisa diputar, di iPhone lama mungkin tidak
+  (rekaman baru selalu WAV).

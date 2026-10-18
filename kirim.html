@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kirim Ucapan 💌</title>
+<link rel="stylesheet" href="luxe.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Cinzel:wght@700&family=Fredoka:wght@600&family=Orbitron:wght@700&family=Dancing+Script:wght@700&family=Righteous&family=Pacifico&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--b1:#07070a;--b2:#241b07;--ac:#e6bd3a;--tx:#fbf6ea;--card:rgba(255,255,255,.1);--on:#1a1305;--hf:'Playfair Display',serif;--fw:800;--sf:Pacifico,cursive}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;font-family:Poppins,sans-serif;color:var(--tx);background:radial-gradient(circle at 50% 0,var(--b2),var(--b1) 75%) fixed;padding:26px 14px 60px;position:relative}
+main{position:relative;z-index:2;max-width:540px;margin:auto;text-align:center}
+.hero{padding:10px 0 22px;animation:rise 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px);filter:blur(6px)}}
+.crown{font-size:34px;filter:drop-shadow(0 0 14px var(--ac));animation:fl 3s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-5px) rotate(-3deg)}}
+.sub{letter-spacing:5px;font-size:11px;color:var(--ac);text-transform:uppercase;margin-top:6px}
+h1{font-family:var(--hf);font-weight:var(--fw);font-size:clamp(34px,10vw,52px);margin:6px 0 10px;line-height:1.15}
+h1 em{font:400 1em var(--sf);display:inline-block;padding:0 .08em .12em}
+p.t{font-size:13.5px;opacity:.88;max-width:400px;margin:12px auto 0;line-height:1.6}
+.card{position:relative;text-align:left;padding:22px 20px 24px;border-radius:26px;border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);
+  background:linear-gradient(160deg,color-mix(in srgb,var(--b1) 62%,transparent),color-mix(in srgb,var(--b1) 38%,transparent));backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);
+  box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14);animation:rise 1s .15s cubic-bezier(.2,.8,.2,1) both}
+.card::before{content:"";position:absolute;inset:6px;border:1px solid color-mix(in srgb,var(--ac) 22%,transparent);border-radius:21px;pointer-events:none}
+.stp{display:flex;align-items:center;gap:10px;margin:22px 0 8px}
+.stp:first-child{margin-top:2px}
+.stp b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:600 12px Poppins;color:var(--on);background:var(--ac)}
+.stp span{font:600 13px Poppins;letter-spacing:1.5px;text-transform:uppercase;color:var(--ac)}
+.stp::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--ac) 55%,transparent),transparent)}
+label{display:block;font-size:12.5px;margin:12px 0 5px;color:color-mix(in srgb,var(--tx) 82%,transparent)}
+input[type=text],input:not([type]),select,textarea{width:100%;padding:13px 15px;border-radius:14px;border:1px solid color-mix(in srgb,var(--ac) 45%,transparent);background:color-mix(in srgb,var(--b1) 70%,transparent);color:var(--tx);font:400 16px Poppins;transition:border-color .2s,box-shadow .2s;outline:0}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 20%,transparent)}
+select option{color:#222;background:#fff}
+textarea{resize:vertical;min-height:120px;line-height:1.5}
+small.c{display:block;text-align:right;font-size:11px;opacity:.7;margin-top:3px}
+input[type=file]{width:100%;font-size:13px;color:var(--tx);padding:10px;border:1px dashed color-mix(in srgb,var(--ac) 55%,transparent);border-radius:14px;background:color-mix(in srgb,var(--b1) 50%,transparent)}
+input[type=file]::file-selector-button{margin-right:12px;padding:8px 14px;border:0;border-radius:20px;background:var(--ac);color:var(--on);font:600 12px Poppins;cursor:pointer}
+#pv{display:block;max-width:100%;max-height:220px;border-radius:14px;border:2px solid var(--ac);margin-top:10px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+
+/* perekam suara */
+.rec{padding:18px 14px;border-radius:20px;border:1px solid color-mix(in srgb,var(--ac) 40%,transparent);background:color-mix(in srgb,var(--b1) 55%,transparent);text-align:center}
+.mic{position:relative;width:86px;height:86px;margin:2px auto 8px;border-radius:50%;border:0;cursor:pointer;font-size:34px;color:var(--on);display:grid;place-items:center}
+.mic::before,.mic::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--ac);opacity:0;pointer-events:none}
+.mic.on{background:linear-gradient(135deg,#ff5d5d,#d11a2a)!important;color:#fff;box-shadow:0 0 34px rgba(255,70,70,.55)!important}
+.mic.on::before{animation:ping 1.6s ease-out infinite;border-color:#ff6b6b}.mic.on::after{animation:ping 1.6s .8s ease-out infinite;border-color:#ff6b6b}
+@keyframes ping{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.7)}}
+.tm{font:600 26px/1 Poppins;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.tm small{font:400 12px Poppins;opacity:.6;letter-spacing:0}
+#lv{display:block;width:100%;max-width:300px;height:38px;margin:8px auto 2px}
+.hnt{font-size:12px;opacity:.8;line-height:1.5;margin-top:4px}
+.res{margin-top:14px;padding:12px;border-radius:16px;border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);background:color-mix(in srgb,var(--ac) 10%,transparent)}
+.res audio{width:100%;height:42px;display:block}
+.res .row{display:flex;gap:8px;margin-top:10px}
+.mini{flex:1;padding:10px 12px;border-radius:30px;border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);background:transparent;color:var(--tx);font:500 13px Poppins;cursor:pointer}
+.mini:hover{background:color-mix(in srgb,var(--ac) 18%,transparent)}
+details{margin-top:12px;font-size:13px}
+summary{cursor:pointer;color:var(--ac);padding:6px 0;list-style:none;text-align:center;font-size:12.5px}
+summary::-webkit-details-marker{display:none}
+#vst{font-size:12.5px;margin-top:10px;min-height:18px;line-height:1.5}
+#vst.err{color:#ffb0b0}
+
+.send{display:block;width:100%;margin-top:26px;padding:17px;border-radius:50px;font:600 16px Poppins;letter-spacing:1px;text-transform:uppercase}
+#st{margin-top:14px;font-size:13.5px;min-height:20px;text-align:center;line-height:1.5}
+#st.err{color:#ffb0b0}#st.ok{color:var(--ac);font-weight:500}
+.bar{height:4px;border-radius:4px;background:color-mix(in srgb,var(--ac) 20%,transparent);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:35%;background:var(--ac);border-radius:4px;animation:ld 1.2s ease-in-out infinite}
+@keyframes ld{0%{margin-left:-35%}100%{margin-left:100%}}
+.done{text-align:center;padding:18px 6px 8px;animation:rise .8s both}
+.done .ck{width:84px;height:84px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;font-size:42px;background:var(--ac);color:var(--on);box-shadow:0 0 50px color-mix(in srgb,var(--ac) 65%,transparent);animation:pop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{transform:scale(0) rotate(-40deg)}}
+.done h2{font-family:var(--hf);font-weight:var(--fw);font-size:28px;margin-bottom:8px}
+.done p{font-size:14px;opacity:.88;line-height:1.6;margin-bottom:6px}
+canvas#cf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i></div>
+<canvas class="dust" id="dust"></canvas>
+<canvas id="cf"></canvas>
+<main>
+  <div class="hero">
+    <div class="crown">👑</div>
+    <p class="sub">Kirim ucapan untuk</p>
+    <h1><em class="shine" id="nm">…</em></h1>
+    <div class="divider">✦</div>
+    <p class="t">Tulis doa terbaikmu, rekam suaramu, dan tambahkan foto. Semuanya akan tampil di halaman kejutan 🎉</p>
+  </div>
+
+  <form class="card" id="f" autocomplete="off">
+   <div id="formBody">
+    <div class="stp"><b>1</b><span>Tentang kamu</span></div>
+    <label for="n">Nama kamu</label>
+    <input id="n" maxlength="40" required placeholder="Ketik namamu">
+    <label for="h">Hubungan denganmu</label>
+    <select id="h">
+      <option>Teman</option><option>Sahabat</option><option>Keluarga</option><option>Suami</option><option>Istri</option>
+      <option>Ayah / Ibu</option><option>Anak</option><option>Saudara</option><option>Rekan kerja</option><option>Tetangga</option>
+      <option value="__lain">✍️ Lainnya (ketik sendiri)…</option>
+    </select>
+    <input id="hl" maxlength="30" placeholder="Ketik hubungannya, mis. Sepupu / Guru" hidden style="margin-top:8px">
+
+    <div class="stp"><b>2</b><span>Ucapanmu</span></div>
+    <textarea id="m" rows="5" maxlength="500" required placeholder="Ketik ucapan dan doa terbaikmu…"></textarea>
+    <small class="c" id="cnt">0/500</small>
+
+    <div id="voicebox">
+      <div class="stp"><b>3</b><span>Suara (opsional)</span></div>
+      <div class="rec">
+        <button type="button" id="mic" class="mic gold" aria-label="Mulai merekam">🎙️</button>
+        <div class="tm" id="tm">0:00 <small>/ 0:45</small></div>
+        <canvas id="lv" width="600" height="76" hidden></canvas>
+        <p class="hnt" id="hint">Ketuk mikrofon untuk mulai merekam. Suaramu akan diputar saat ucapanmu tampil.</p>
+        <div class="res" id="res" hidden>
+          <audio id="vp" controls playsinline></audio>
+          <div class="row"><button type="button" class="mini" id="again">🔁 Rekam ulang</button><button type="button" class="mini" id="clearVoice">🗑️ Hapus</button></div>
+        </div>
+        <details>
+          <summary>Atau pilih file suara dari HP ▾</summary>
+          <input type="file" id="voiceFile" accept="audio/*" style="margin-top:6px">
+          <p class="hnt">Jika rekam langsung tidak berfungsi di browsermu, rekam lewat aplikasi Perekam Suara lalu pilih filenya di sini (maks. 45 detik).</p>
+        </details>
+        <p id="vst" role="status"></p>
+      </div>
+    </div>
+
+    <div id="fotobox">
+      <div class="stp"><b>4</b><span>Foto (opsional)</span></div>
+      <input type="file" id="p" accept="image/*">
+      <img id="pv" alt="" hidden>
+    </div>
+
+    <input id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px">
+    <button id="b" class="send gold" type="submit">💌 Kirim Ucapan</button>
+    <div class="bar" id="bar" hidden><i></i></div>
+    <p id="st" role="status"></p>
+   </div>
+   <div class="done" id="done" hidden>
+    <div class="ck">✓</div>
+    <h2>Terkirim!</h2>
+    <p id="doneTxt">Terima kasih, ucapanmu sudah terkirim 🎉</p>
+    <button type="button" class="send gold" id="lagi" style="margin-top:18px">✨ Kirim ucapan lagi</button>
+   </div>
+  </form>
+</main>
+<script src="config.js"></script>
+<script src="tema.js"></script>
+<script src="efek.js"></script>
+<script>
+window.addEventListener("error",function(e){const el=document.getElementById("vst");if(el&&!el.textContent){el.textContent="Ada kesalahan pada halaman. Muat ulang halaman; jika tetap terjadi, hubungi admin website.";el.className="err"}});
+const SU=(window.CONFIG||{}).sheetUrl||"",$=id=>document.getElementById(id);
+const MAXSEC=45,MAXB64=3900000;
+let foto="",modr=false,voiceBlob=null,voiceUrl="",T=null,busy=false;
+const st=(t,c)=>{$("st").textContent=t;$("st").className=c||""};
+const vs=(t,err)=>{$("vst").textContent=t;$("vst").className=err?"err":""};
+
+function pakai(p){p=p||{};T=pasangVars(cariTema(p.tema||"black-gold"));if(p.nama)$("nm").textContent=p.nama;
+  $("fotobox").hidden=p.izinFoto===false;modr=!!p.moderasi;if(window.DUST)DUST.recolor()}
+try{pakai(JSON.parse(localStorage.getItem("cfg")))}catch(e){pakai()}
+window.DUST=Efek.debu($("dust"),()=>(T?T.c:["#e6bd3a"])[Math.random()*(T?T.c.length:1)|0]);
+if(SU)fetch(SU+"?action=init&t="+Date.now()).then(r=>r.json()).then(d=>{if(d.ok){pakai(d.pengaturan);try{localStorage.setItem("cfg",JSON.stringify(d.pengaturan))}catch(e){}}}).catch(()=>{});
+
+$("h").onchange=()=>{const l=$("h").value=="__lain";$("hl").hidden=!l;$("hl").required=l;if(l)$("hl").focus()};
+$("m").oninput=()=>$("cnt").textContent=$("m").value.length+"/500";
+
+/* ---------- foto ---------- */
+function resize(f){return new Promise((ok,no)=>{const im=new Image(),u=URL.createObjectURL(f);
+  im.onload=()=>{const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");
+    c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.82))};
+  im.onerror=no;im.src=u})}
+$("p").onchange=async e=>{const f=e.target.files[0];foto="";$("pv").hidden=true;if(!f)return;
+  try{foto=await resize(f);$("pv").src=foto;$("pv").hidden=false;st("")}
+  catch(x){st("Foto tidak bisa dibaca, coba foto lain.","err")}};
+
+/* ---------- konversi suara -> WAV mono (diputar di semua HP, termasuk iPhone) ---------- */
+function encWav(f32,rate){const n=f32.length,b=new ArrayBuffer(44+n*2),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+  w(0,"RIFF");v.setUint32(4,36+n*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,n*2,true);
+  let peak=0;for(let i=0;i<n;i++){const a=Math.abs(f32[i]);if(a>peak)peak=a}
+  const g=peak>.0005?Math.min(3,.92/peak):1; // normalisasi lembut supaya suara pelan tetap jelas
+  for(let i=0;i<n;i++){const s=Math.max(-1,Math.min(1,f32[i]*g));v.setInt16(44+i*2,s<0?s*32768:s*32767,true)}
+  return new Blob([b],{type:"audio/wav"})}
+async function toWav(blob){
+  const AC=window.AudioContext||window.webkitAudioContext,OC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+  if(!AC||!OC)throw new Error("no-webaudio");
+  const ctx=new AC(),arr=await blob.arrayBuffer();
+  const buf=await new Promise((ok,no)=>{const p=ctx.decodeAudioData(arr,ok,no);if(p&&p.catch)p.catch(no)});
+  try{ctx.close()}catch(e){}
+  if(buf.duration>MAXSEC+1.5)throw new Error("terlalu-panjang");
+  let last=null;
+  for(const rate of [16000,22050,44100]){
+    try{const len=Math.max(1,Math.ceil(Math.min(buf.duration,MAXSEC)*rate)),oc=new OC(1,len,rate),s=oc.createBufferSource();
+      s.buffer=buf;s.connect(oc.destination);s.start(0);
+      const out=await new Promise((ok,no)=>{const p=oc.startRendering();if(p&&p.then)p.then(ok,no);else oc.oncomplete=e=>ok(e.renderedBuffer)});
+      return {blob:encWav(out.getChannelData(0),rate),dur:Math.min(buf.duration,MAXSEC)}}catch(e){last=e}}
+  throw last||new Error("gagal-konversi")}
+async function siapkan(blob,sec){
+  $("hint").textContent="Mengoptimalkan suara…";
+  try{const r=await toWav(blob);setVoice(r.blob,r.dur)}
+  catch(e){
+    if(e&&e.message==="terlalu-panjang"){vs("Suara terlalu panjang. Maksimal "+MAXSEC+" detik.",true);resetRec();return}
+    if(blob.size<=2600000){setVoice(blob,sec||0)} // fallback: kirim apa adanya
+    else{vs("Format suara tidak didukung browser ini. Coba rekam langsung atau pilih file MP3/M4A/WAV yang lebih singkat.",true);resetRec()}}}
+function setVoice(blob,dur){
+  voiceBlob=blob;if(voiceUrl)URL.revokeObjectURL(voiceUrl);voiceUrl=URL.createObjectURL(blob);
+  $("vp").src=voiceUrl;$("res").hidden=false;$("hint").textContent="Suara siap ✓ Putar dulu untuk memeriksa sebelum dikirim.";
+  $("mic").hidden=true;$("tm").hidden=true;$("lv").hidden=true;
+  vs((dur?Math.round(dur)+" detik · ":"")+(blob.size/1024|0)+" KB")}
+function resetRec(){$("mic").hidden=false;$("tm").hidden=false;setTm(0);$("hint").textContent="Ketuk mikrofon untuk mulai merekam. Suaramu akan diputar saat ucapanmu tampil."}
+function hapusSuara(){voiceBlob=null;try{$("vp").pause()}catch(e){}$("vp").removeAttribute("src");$("res").hidden=true;$("voiceFile").value="";
+  if(voiceUrl)URL.revokeObjectURL(voiceUrl);voiceUrl="";vs("");resetRec()}
+$("clearVoice").onclick=hapusSuara;$("again").onclick=()=>{hapusSuara();$("mic").click()};
+
+/* ---------- rekam ---------- */
+let rec=null,stream=null,tmr=null,t0=0,actx=null,raf=0;
+const fmt=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+const setTm=s=>$("tm").innerHTML=fmt(s)+" <small>/ "+fmt(MAXSEC)+"</small>";
+function stopMeter(){cancelAnimationFrame(raf);try{actx&&actx.close()}catch(e){}actx=null}
+function meter(){
+  try{const AC=window.AudioContext||window.webkitAudioContext;actx=new AC();const an=actx.createAnalyser();an.fftSize=64;
+    actx.createMediaStreamSource(stream).connect(an);const d=new Uint8Array(an.frequencyBinCount),cv=$("lv"),c=cv.getContext("2d");
+    const col=getComputedStyle(document.documentElement).getPropertyValue("--ac").trim()||"#e6bd3a";
+    (function dr(){raf=requestAnimationFrame(dr);an.getByteFrequencyData(d);c.clearRect(0,0,cv.width,cv.height);
+      const n=24,w=cv.width/n;c.fillStyle=col;
+      for(let i=0;i<n;i++){const v=d[Math.min(d.length-1,Math.floor(i*d.length/n*.8))]/255,h=Math.max(5,v*cv.height*.95);
+        c.globalAlpha=.55+v*.45;c.beginPath();c.roundRect?c.roundRect(i*w+3,(cv.height-h)/2,w-6,h,6):c.rect(i*w+3,(cv.height-h)/2,w-6,h);c.fill()}})()
+  }catch(e){}}
+function stopTracks(){try{stream&&stream.getTracks().forEach(t=>t.stop())}catch(e){}stream=null}
+async function mulai(){
+  vs("");$("mic").disabled=true;
+  try{
+    if(!window.isSecureContext)throw new Error("Rekaman mikrofon memerlukan halaman HTTPS. Buka link yang diawali https://.");
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("Browser ini tidak memberi akses mikrofon. Buka link lewat Chrome (Android) atau Safari (iPhone), bukan browser di dalam WhatsApp/Instagram/Facebook — atau pilih file suara di bawah.");
+    if(!window.MediaRecorder)throw new Error("Rekam langsung belum didukung browser ini. Gunakan Chrome/Safari terbaru atau pilih file suara di bawah.");
+    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+    const cand=["audio/mp4;codecs=mp4a.40.2","audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"];
+    const mime=cand.find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));
+    rec=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);const chunks=[];
+    rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+    rec.onerror=()=>{vs("Terjadi kendala saat merekam. Coba lagi atau pilih file suara.",true);selesaiUI();stopTracks()};
+    rec.onstop=async()=>{const sec=(Date.now()-t0)/1000;clearInterval(tmr);stopMeter();stopTracks();selesaiUI();
+      const blob=new Blob(chunks,{type:rec.mimeType||mime||"audio/webm"});
+      if(blob.size<800){vs("Rekaman kosong, coba lagi dan pastikan mikrofon aktif.",true);resetRec();return}
+      await siapkan(blob,sec)};
+    rec.start(1000);t0=Date.now();$("mic").classList.add("on");$("mic").textContent="⏹️";$("mic").setAttribute("aria-label","Selesai merekam");
+    $("lv").hidden=false;meter();$("hint").textContent="🔴 Merekam… bicara sekarang. Ketuk ⏹️ jika sudah selesai.";
+    tmr=setInterval(()=>{const s=(Date.now()-t0)/1000;setTm(s);if(s>=MAXSEC)akhir()},200);
+  }catch(e){stopTracks();vs("Tidak bisa mulai merekam: "+(e.name==="NotAllowedError"?"akses mikrofon ditolak. Izinkan Mikrofon di pengaturan situs lalu coba lagi.":(e.message||"terjadi kesalahan.")),true)}
+  finally{$("mic").disabled=false}}
+function selesaiUI(){$("mic").classList.remove("on");$("mic").textContent="🎙️";$("mic").setAttribute("aria-label","Mulai merekam");$("lv").hidden=true}
+function akhir(){if(rec&&rec.state!=="inactive")rec.stop()}
+$("mic").onclick=()=>{if(rec&&rec.state==="recording")akhir();else mulai()};
+$("voiceFile").onchange=async e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  if(!/^audio\//.test(f.type)&&!/\.(mp3|m4a|aac|wav|ogg|opus|webm|amr|3gp)$/i.test(f.name)){vs("Pilih file audio seperti MP3, M4A, WAV, atau OGG.",true);e.target.value="";return}
+  if(f.size>25e6){vs("File terlalu besar. Pilih rekaman yang lebih singkat.",true);e.target.value="";return}
+  vs("");await siapkan(f,0)};
+
+/* ---------- kirim ---------- */
+async function blobBase64(blob){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=no;r.readAsDataURL(blob)})}
+function kirimResetUI(){$("f").reset();$("hl").hidden=true;foto="";$("pv").hidden=true;$("cnt").textContent="0/500";hapusSuara()}
+$("lagi").onclick=()=>{$("done").hidden=true;$("formBody").hidden=false;st("");scrollTo({top:0,behavior:"smooth"})};
+$("f").onsubmit=async e=>{e.preventDefault();
+  if($("hp").value||busy)return;
+  if(!SU){st("Halaman ini belum terhubung ke Google Sheet. Hubungi pemilik web.","err");return}
+  if(rec&&rec.state==="recording"){st("Selesaikan dulu rekaman suaramu (ketuk ⏹️).","err");return}
+  let last=0;try{last=+(localStorage.getItem("lastSend")||0)}catch(x){}
+  if(Date.now()-last<20000){st("Tunggu sebentar sebelum kirim lagi 🙏","err");return}
+  const hub=$("h").value=="__lain"?$("hl").value.trim():$("h").value;
+  busy=true;$("b").disabled=true;$("bar").hidden=false;st(voiceBlob?"Mengirim ucapan & suara… jangan tutup halaman 💌":"Mengirim… mohon tunggu 💌");
+  try{
+    const suara=voiceBlob?await blobBase64(voiceBlob):"";
+    if(suara.length>MAXB64)throw new Error("rekaman terlalu besar, rekam lebih singkat");
+    const r=await fetch(SU,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({aksi:"kirim",nama:$("n").value.trim(),hubungan:hub,pesan:$("m").value.trim(),foto:foto?foto.split(",")[1]:"",suara,suaraTipe:voiceBlob?(voiceBlob.type||"audio/webm"):""})});
+    const d=await r.json();if(!d.ok)throw new Error(d.error||"gagal");
+    try{localStorage.setItem("lastSend",Date.now())}catch(x){}
+    kirimResetUI();st("");
+    $("doneTxt").textContent=d.moderasi?"Terima kasih! Ucapanmu akan tampil setelah disetujui 🎉":"Terima kasih! Ucapanmu sudah terkirim dan akan tampil di halaman kejutan 🎉";
+    $("formBody").hidden=true;$("done").hidden=false;scrollTo({top:0,behavior:"smooth"});pesta();
+  }catch(x){st("Gagal mengirim ("+x.message+"). Coba lagi ya.","err")}
+  busy=false;$("b").disabled=false;$("bar").hidden=true};
+
+/* ---------- konfeti kecil ---------- */
+function pesta(){const cv=$("cf"),c=cv.getContext("2d");cv.width=innerWidth;cv.height=innerHeight;const cols=T?T.c:["#e6bd3a"];
+  let P=[];for(let i=0;i<130;i++){const a=Math.random()*6.28,v=6+Math.random()*10;P.push({x:innerWidth/2,y:innerHeight*.35,vx:Math.cos(a)*v,vy:Math.sin(a)*v-6,s:5+Math.random()*7,c:cols[i%cols.length],r:Math.random()*6})}
+  (function f(){c.clearRect(0,0,cv.width,cv.height);P=P.filter(p=>p.y<innerHeight+20);
+    P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.28;p.vx*=.985;p.r+=.2;c.save();c.translate(p.x,p.y);c.rotate(p.r);c.fillStyle=p.c;c.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);c.restore()});
+    if(P.length)requestAnimationFrame(f)})()}
+</script>
+</body>
+</html>

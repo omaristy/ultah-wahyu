@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin ⚙️ Ulang Tahun</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ac:#e6bd3a;--ac2:#f6dc8a;--bg:#0b0b10;--cd:#15151d;--bd:#2c2c38;--tx:#f4efe2;--mu:#a29f94}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{font-family:Poppins,system-ui,Segoe UI,Roboto,sans-serif;background:radial-gradient(1200px 600px at 50% -10%,#2a2008,transparent 60%),var(--bg) fixed;color:var(--tx);padding:0 14px 120px;line-height:1.5}
+.w{max-width:780px;margin:auto}
+.hd{text-align:center;padding:30px 0 10px}
+.hd .lg{font-size:34px;filter:drop-shadow(0 0 12px var(--ac))}
+.hd h1{font:800 28px 'Playfair Display',serif;margin:4px 0 2px;background:linear-gradient(100deg,#b8902a,var(--ac) 30%,#fff3c4 50%,var(--ac) 70%,#b8902a);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:-220% 0}}
+.sm{color:var(--mu);font-size:13px}
+.nav{position:sticky;top:0;z-index:6;display:flex;gap:8px;overflow-x:auto;padding:10px 2px;margin:8px 0 0;background:linear-gradient(var(--bg) 70%,transparent);scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:none;color:var(--tx);text-decoration:none;font-size:12.5px;padding:7px 14px;border:1px solid var(--bd);border-radius:30px;background:var(--cd);transition:.2s}
+.nav a:hover{border-color:var(--ac);color:var(--ac)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.stats div{background:linear-gradient(160deg,#1c1a12,var(--cd));border:1px solid color-mix(in srgb,var(--ac) 35%,var(--bd));border-radius:16px;padding:14px 8px;text-align:center}
+.stats b{display:block;font:700 26px 'Playfair Display',serif;color:var(--ac)}.stats span{font-size:11.5px;color:var(--mu);letter-spacing:.5px}
+.cd{position:relative;background:linear-gradient(160deg,#1a1a23,var(--cd));border:1px solid var(--bd);border-radius:20px;padding:18px;margin:16px 0;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.cd::before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:.7}
+.cd h2{font:600 14px Poppins;color:var(--ac);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase}
+label{display:block;font-size:12.5px;color:var(--mu);margin:12px 0 5px}
+input[type=text],input[type=password],input[type=number],select,textarea{width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--bd);background:#0e0e14;color:var(--tx);font:inherit;font-size:15px;outline:0;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px #e6bd3a26}
+input[type=file]{width:100%;font-size:13px;color:var(--mu);padding:9px;border:1px dashed #4a4a58;border-radius:12px;background:#0e0e14}
+input[type=file]::file-selector-button{margin-right:10px;padding:7px 13px;border:0;border-radius:20px;background:var(--ac);color:#1a1305;font-weight:600;cursor:pointer}
+textarea{resize:vertical;min-height:110px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.sw:last-child{border:0}.sw small{display:block;color:var(--mu);font-size:12px}
+.sw input{appearance:none;-webkit-appearance:none;flex:none;width:46px;height:26px;border-radius:20px;background:#34343f;position:relative;cursor:pointer;transition:.25s}
+.sw input::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s}
+.sw input:checked{background:var(--ac)}.sw input:checked::after{transform:translateX(20px);background:#1a1305}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;margin-top:6px}
+.o{display:flex;align-items:center;gap:8px;border:1px solid var(--bd);border-radius:12px;padding:9px 10px;font-size:13px;cursor:pointer;background:#0e0e14;transition:.2s}
+.o:has(input:checked){border-color:var(--ac);background:#e6bd3a14}
+.o input{accent-color:var(--ac);width:18px;height:18px;flex:none}
+.o b{display:block;font-size:14px}.o i{font-style:normal;font-size:11px;color:var(--mu)}
+.o.ada i{color:#7be08b}.o.no{opacity:.55}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--bd);background:#22222c;color:var(--tx);padding:9px 14px;transition:.2s}
+button:hover:not(:disabled){border-color:var(--ac)}
+button:disabled{opacity:.55;cursor:wait}
+.pr{background:linear-gradient(135deg,#b8902a,var(--ac) 40%,var(--ac2) 60%,var(--ac));color:#1a1305;border:0;font-weight:700;padding:13px 24px;font-size:15px;box-shadow:0 8px 24px #e6bd3a40}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#0b0b10ee;backdrop-filter:blur(12px);border-top:1px solid var(--bd);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;z-index:8}
+#msg{font-size:13px;min-width:0}.ok{color:#7be08b}.er{color:#ff9b9b}
+.it{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--bd)}
+.it:last-child{border:0}
+.it img{width:64px;height:64px;object-fit:cover;border-radius:12px;flex:none;border:1px solid var(--bd)}
+.it .nf{width:64px;height:64px;border-radius:12px;background:#0e0e14;display:grid;place-items:center;font-size:26px;flex:none;border:1px solid var(--bd)}
+.it p{font-size:14px;word-break:break-word}.it .bt{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.it .bt button{padding:6px 11px;font-size:12px}
+.bd{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;margin-left:6px}
+.b1{background:#1d3a24;color:#7be08b}.b0{background:#3a2020;color:#ff9b9b}.bv{background:#3a3010;color:var(--ac)}
+.vp{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:7px 14px 7px 8px;border-radius:30px;border:1px solid var(--ac);background:#e6bd3a14;color:var(--ac);font-size:13px}
+.vp .pb{width:26px;height:26px;border-radius:50%;background:var(--ac);color:#1a1305;display:grid;place-items:center;font-size:11px}
+.vp.err{border-color:#ff9b9b;color:#ff9b9b}
+.vp audio{display:none}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="hd"><div class="lg">👑</div><h1>Panel Admin</h1>
+  <p class="sm">Atur semua tampilan dan isi web kejutan dari sini. Tidak perlu edit file lagi.</p></div>
+
+  <!-- LOGIN -->
+  <div class="cd" id="login">
+    <h2>🔐 Masuk</h2>
+    <label>Sandi admin (yang Anda tulis di Code.gs)</label>
+    <input type="password" id="pw" autocomplete="current-password">
+    <p style="margin-top:12px"><button class="pr" id="masuk">Masuk</button></p>
+    <p id="lm" class="sm" style="margin-top:8px"></p>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panel" hidden>
+    <div class="nav"><a href="#s-umum">👤 Umum</a><a href="#s-tulis">✍️ Tulisan</a><a href="#s-tampil">🎨 Tampilan</a><a href="#s-media">📁 Media</a><a href="#s-teman">💌 Teman</a><a href="#s-daftar">📋 Daftar</a></div>
+    <div class="stats"><div><b id="stT">–</b><span>UCAPAN</span></div><div><b id="stV">–</b><span>DENGAN SUARA</span></div><div><b id="stS">–</b><span>TAMPIL</span></div></div>
+    <div class="cd" id="s-umum"><h2>👤 Umum</h2>
+      <div class="row"><div><label>Nama yang berulang tahun</label><input type="text" id="nama" maxlength="60"></div>
+      <div><label>Umur (boleh kosong)</label><input type="text" id="umur" maxlength="3" inputmode="numeric"></div></div>
+      <label>Pengirim ucapan (mis. "Teman-temanmu")</label><input type="text" id="dari" maxlength="60">
+    </div>
+
+    <div class="cd" id="s-tulis"><h2>✍️ Tulisan</h2>
+      <label>Ucapan utama (satu ucapan per baris, tampil bergantian)</label><textarea id="ucapan"></textarea>
+      <label>Teks melingkar di sekitar foto</label><input type="text" id="teksMelingkar" maxlength="80">
+      <label>Teks berjalan di pita bawah (kosongkan untuk menyembunyikan)</label><input type="text" id="teksBerjalan" maxlength="300">
+    </div>
+
+    <div class="cd" id="s-tampil"><h2>🎨 Tampilan</h2>
+      <label>Tema</label><select id="tema"></select>
+      <div class="row"><div><label>Latar belakang</label>
+        <select id="latar"><option value="video">🎬 Video</option><option value="foto">🖼️ Foto</option><option value="polos">✍️ Tulisan saja (polos)</option></select></div>
+      <div><label>Konfeti</label>
+        <select id="konfeti"><option value="meriah">🎉 Meriah</option><option value="ringan">🎊 Ringan</option><option value="mati">🚫 Mati</option></select></div></div>
+      <div class="sw"><span>Lingkaran foto + teks melingkar<small>Matikan jika ingin tulisan saja</small></span><input type="checkbox" id="lingkaranFoto"></div>
+      <div><label>Posisi lingkaran foto</label><select id="posisiFoto"><option value="kanan">Pojok kanan atas</option><option value="kiri">Pojok kiri atas</option></select></div>
+      <div class="sw"><span>Ornamen melayang (emoji sesuai tema)</span><input type="checkbox" id="ornamen"></div>
+      <div class="sw"><span>Tombol "🎨 Tema" untuk penerima<small>Jika mati, tema hanya diatur dari sini</small></span><input type="checkbox" id="tombolTema"></div>
+    </div>
+
+    <div class="cd" id="s-media"><h2>📁 Media (foto, video, lagu)</h2>
+      <p class="sm">Taruh file manual di folder dengan nama bernomor: <b>assets/photos/foto1.jpg</b>, <b>assets/video/video1.mp4</b>, <b>assets/music/lagu1.mp3</b> (jpg/png/webp, mp4/webm, mp3/m4a otomatis dikenali). Lalu pilih nomor yang dipakai. Tanda ✓ berarti file ditemukan.</p>
+      <p><button type="button" id="diag">🔎 Diagnosa file media</button></p><pre class="sm" id="diagHasil" style="white-space:pre-wrap;margin:0 0 10px"></pre>
+      <label>Foto yang dipakai</label><div class="g" id="foto"></div>
+      <label>Video latar (pastikan Latar = Video di bagian Tampilan)</label><div class="g" id="video"></div>
+      <div class="sw"><span>Suara video ikut berbunyi<small>Jika mati, hanya lagu yang terdengar</small></span><input type="checkbox" id="videoSuara"></div>
+      <label>Lagu yang dipakai</label><div class="g" id="lagu"></div>
+      <p class="sm" style="opacity:.6">admin.html build 2026.10.18-bersih2</p>
+    </div>
+
+    <div class="cd" id="s-teman"><h2>💌 Ucapan dari teman</h2>
+      <p class="sm" id="linkKirim"></p>
+      <div class="sw"><span>Tampil sebagai slide di antara ucapan</span><input type="checkbox" id="slideTeman"></div>
+      <div class="sw"><span>Tampil di teks berjalan</span><input type="checkbox" id="teksTeman"></div>
+      <div class="sw"><span>Tampilkan foto teman<small>Jika mati, hanya tulisan</small></span><input type="checkbox" id="fotoTeman"></div>
+      <div class="sw"><span>Izinkan teman mengirim foto di formulir</span><input type="checkbox" id="izinFoto"></div>
+      <div class="sw"><span>Moderasi: ucapan baru tampil setelah saya setujui</span><input type="checkbox" id="moderasi"></div>
+      <label>Cek ucapan baru tiap … detik (di halaman penerima)</label><input type="number" id="segarkan" min="15" max="600">
+    </div>
+
+    <div class="cd" id="s-daftar"><h2>📋 Daftar ucapan teman</h2>
+      <p><button id="muat">🔄 Muat ulang daftar</button></p>
+      <div id="daftar" class="sm" style="margin-top:8px">Memuat…</div>
+    </div>
+  </div>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <span id="msg"></span>
+  <button class="pr" id="simpan">💾 Simpan Pengaturan</button>
+  <button onclick="window.open('index.html','_blank')">👁️ Lihat hasil</button>
+</div>
+
+<script src="config.js"></script>
+<script src="tema.js"></script>
+<script src="suara.js"></script>
+<script>
+const SU=(window.CONFIG||{}).sheetUrl||"",$=id=>document.getElementById(id);
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const okImg=u=>/^https:\/\/(drive\.google\.com|lh3\.googleusercontent\.com)\//.test(u);
+const DEF={nama:"Sahabat",umur:"",dari:"Teman-temanmu",ucapan:["Selamat ulang tahun! 🎉","Semoga panjang umur, sehat selalu, dan bahagia setiap hari."],teksMelingkar:"SELAMAT ULANG TAHUN ✦ HAPPY BIRTHDAY ✦ ",teksBerjalan:"Happy Birthday 🎂 Semoga semua impianmu terwujud 🎈",
+  tema:"black-gold",tombolTema:true,lingkaranFoto:true,posisiFoto:"kanan",latar:"video",foto:[1,2,3],video:1,videoSuara:false,lagu:[1],
+  konfeti:"meriah",ornamen:true,teksTeman:true,slideTeman:true,fotoTeman:true,moderasi:false,izinFoto:true,segarkan:60};
+let SANDI=sessionStorage.getItem("sandi")||"";
+async function post(o){const r=await fetch(SU,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({sandi:SANDI},o))});return r.json()}
+const msg=(t,c)=>{$("msg").textContent=t;$("msg").className=c||""};
+
+/* tema */
+$("tema").innerHTML=`<option value="acak">🎲 Acak (berbeda tiap dibuka)</option>`+Object.keys(CATN).map(k=>`<optgroup label="${CATN[k]}">`+TH.map(t=>t.k==k?`<option value="${slug(t.n)}">${t.n}</option>`:"").join("")+`</optgroup>`).join("");
+
+/* media + cek file ada */
+const EXT={foto:["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"],lagu:["mp3","m4a","ogg","wav","MP3","M4A","OGG","WAV"],video:["mp4","webm","mov","MP4","WEBM","MOV"]};
+const DIR={foto:"assets/photos/foto",lagu:"assets/music/lagu",video:"assets/video/video"};
+async function adaU(u){const c=new AbortController();try{const r=await fetch(u,{signal:c.signal,cache:"no-store"});const ct=r.headers.get("content-type")||"";c.abort();return{ok:r.ok&&!/html/.test(ct),status:r.status,ct:ct}}catch(x){return{ok:false,status:0,ct:""}}}
+async function ada(j,n){for(const e of EXT[j]){const u=`${DIR[j]}${n}.${e}`;const r=await adaU(u);if(r.ok)return u.split("/").pop()}return null}
+function buatGrid(j,jenis,label){const el=$(j);el.innerHTML="";
+  if(jenis=="radio")el.insertAdjacentHTML("beforeend",`<label class="o ada"><input type="radio" name="video" value="0"><span><b>Tanpa</b><i>tidak pakai video</i></span></label>`);
+  for(let n=1;n<=9;n++){el.insertAdjacentHTML("beforeend",`<label class="o" id="${j}${n}"><input type="${jenis}" name="${j}" value="${n}"><span><b>${label} ${n}</b><i>mengecek…</i></span></label>`);
+    ada(j,n).then(f=>{const o=$(j+n);o.classList.add(f?"ada":"no");o.querySelector("i").textContent=f?"✓ "+f:"file belum ada"})}}
+buatGrid("foto","checkbox","Foto");buatGrid("video","radio","Video");buatGrid("lagu","checkbox","Lagu");
+
+/* isi & ambil form */
+const BOOL=["tombolTema","lingkaranFoto","ornamen","videoSuara","slideTeman","teksTeman","fotoTeman","izinFoto","moderasi"];
+const TXT=["nama","umur","dari","teksMelingkar","teksBerjalan","tema","latar","konfeti","posisiFoto","segarkan"];
+function isi(p){p=Object.assign({},DEF,p);
+  TXT.forEach(k=>{if(k!="tema")$(k).value=p[k]});
+  $("tema").value=p.tema=="acak"?"acak":slug(TH[cariTema(p.tema)].n);
+  BOOL.forEach(k=>$(k).checked=!!p[k]);
+  $("ucapan").value=(p.ucapan||[]).join("\n");
+  document.querySelectorAll('#foto input').forEach(i=>i.checked=p.foto.includes(+i.value));
+  document.querySelectorAll('#lagu input').forEach(i=>i.checked=p.lagu.includes(+i.value));
+  const v=document.querySelector(`#video input[value="${p.video||0}"]`);if(v)v.checked=true}
+function ambil(){const p={};TXT.forEach(k=>p[k]=$(k).value);p.segarkan=+p.segarkan||60;
+  BOOL.forEach(k=>p[k]=$(k).checked);
+  p.ucapan=$("ucapan").value.split("\n").map(x=>x.trim()).filter(Boolean);
+  p.foto=[...document.querySelectorAll('#foto input:checked')].map(i=>+i.value);
+  p.lagu=[...document.querySelectorAll('#lagu input:checked')].map(i=>+i.value);
+  const v=document.querySelector('#video input:checked');p.video=v?+v.value:0;return p}
+
+/* masuk */
+async function masuk(){
+  if(!SU){$("lm").textContent="Isi dulu sheetUrl di config.js (lihat PANDUAN-ADMIN.txt).";$("lm").className="er";return}
+  $("lm").textContent="Memeriksa…";$("lm").className="sm";
+  try{const d=await post({aksi:"masuk"});if(!d.ok)throw new Error(d.error);
+    sessionStorage.setItem("sandi",SANDI);$("login").hidden=true;$("panel").hidden=false;$("bar").hidden=false;
+    isi(d.pengaturan);$("linkKirim").textContent="Link untuk teman: "+new URL("kirim.html",location.href).href;muat()}
+  catch(e){SANDI="";sessionStorage.removeItem("sandi");$("lm").textContent="Gagal masuk: "+e.message;$("lm").className="er"}}
+$("masuk").onclick=()=>{SANDI=$("pw").value;masuk()};
+$("pw").onkeydown=e=>{if(e.key=="Enter")$("masuk").click()};
+if(SANDI)masuk();
+
+/* simpan */
+$("simpan").onclick=async()=>{$("simpan").disabled=true;msg("Menyimpan…");
+  try{const p=ambil(),d=await post({aksi:"simpan",pengaturan:p});if(!d.ok)throw new Error(d.error);
+    try{localStorage.setItem("cfg",JSON.stringify(p))}catch(e){}msg("✓ Tersimpan! Buka halaman kejutan untuk melihat.","ok")}
+  catch(e){msg("Gagal: "+e.message,"er")}$("simpan").disabled=false};
+
+
+
+/* diagnosa: tampilkan alamat yang dicari & status HTTP tiap file */
+$("diag").onclick=async()=>{const o=$("diagHasil");o.textContent="Memeriksa…";
+  let t="Halaman ini : "+location.href+"\nFolder dicari: "+new URL("assets/",location.href).href+"\n\n";
+  for(const j of ["foto","video","lagu"]){
+    for(let n=1;n<=9;n++){let hit=null,st=[];
+      for(const e of EXT[j]){const u=`${DIR[j]}${n}.${e}`,r=await adaU(u);if(r.ok){hit=u;break}st.push(r.status)}
+      if(hit)t+="✓ "+hit+"\n";else if(n<=3)t+="✗ "+DIR[j]+n+".(…) tidak ditemukan [status: "+[...new Set(st)].join("/")+"]\n"}
+    t+="\n"}
+  t+="Catatan: status 404 = nama/lokasi file salah; 0 = server tidak bisa dihubungi; 200 tetapi ✗ = server mengembalikan halaman HTML, bukan file.";
+  o.textContent=t};
+/* daftar ucapan teman */
+const PL={};
+async function muat(){$("daftar").textContent="Memuat…";
+  try{const d=await post({aksi:"daftar"});if(!d.ok)throw new Error(d.error);
+    $("stT").textContent=d.items.length;$("stV").textContent=d.items.filter(x=>x.suara).length;$("stS").textContent=d.items.filter(x=>x.tampil).length;
+    $("daftar").innerHTML=d.items.length?d.items.map(x=>`<div class="it">${x.foto&&okImg(x.foto)?`<img src="${esc(x.foto)}" alt="">`:`<div class="nf">💌</div>`}<div style="min-width:0"><p><b>${esc(x.nama)}</b>${x.hubungan?` · ${esc(x.hubungan)}`:""}<span class="bd ${x.tampil?"b1":"b0"}">${x.tampil?"tampil":"disembunyikan"}</span>${x.suara?`<span class="bd bv">🎙️ suara</span>`:""}</p><p style="color:var(--mu)">${esc(x.pesan)}</p>${x.suara&&Suara.driveId(x.suara)?`<button class="vp" data-p="${esc(x.suara)}" type="button"><span class="pb">▶</span><span class="vt">Putar suara</span></button>`:""}
+      <div class="bt">${x.tampil?`<button data-i="${esc(x.id)}" data-a="TIDAK">🙈 Sembunyikan</button>`:`<button data-i="${esc(x.id)}" data-a="YA">👁️ Tampilkan</button>`}<button data-i="${esc(x.id)}" data-a="HAPUS">🗑️ Hapus</button></div></div></div>`).join(""):"Belum ada ucapan dari teman."}
+  catch(e){$("daftar").textContent="Gagal memuat: "+e.message}}
+let curAud=null,curBtn=null;
+function resetBtn(b){if(!b)return;b.classList.remove("err");b.querySelector(".pb").textContent="▶";b.querySelector(".vt").textContent="Putar suara"}
+async function putar(b){
+  if(curAud){curAud.pause();curAud=null;const same=curBtn===b;resetBtn(curBtn);curBtn=null;if(same)return}
+  curBtn=b;b.querySelector(".pb").textContent="…";b.querySelector(".vt").textContent="Memuat suara…";
+  try{const u=await Suara.blobUrl(b.dataset.p),a=new Audio(u);curAud=a;
+    a.onended=()=>{resetBtn(b);curAud=null;curBtn=null};a.onerror=()=>{b.classList.add("err");b.querySelector(".pb").textContent="!";b.querySelector(".vt").textContent="Format tidak didukung";curAud=null};
+    await a.play();b.querySelector(".pb").textContent="■";b.querySelector(".vt").textContent="Memutar… (ketuk untuk berhenti)"}
+  catch(e){b.classList.add("err");b.querySelector(".pb").textContent="!";b.querySelector(".vt").textContent="Gagal memutar";curAud=null;console.warn(e)}}
+$("muat").onclick=muat;
+$("daftar").onclick=async e=>{const pb=e.target.closest("button[data-p]");if(pb){putar(pb);return}const b=e.target.closest("button[data-i]");if(!b)return;
+  if(b.dataset.a=="HAPUS"&&!confirm("Hapus ucapan ini selamanya?"))return;
+  b.disabled=true;try{const d=await post({aksi:"ubah",id:b.dataset.i,tampil:b.dataset.a});if(!d.ok)throw new Error(d.error);muat()}catch(x){alert("Gagal: "+x.message);b.disabled=false}};
+</script>
+</body>
+</html>

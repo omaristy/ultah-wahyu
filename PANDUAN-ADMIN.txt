@@ -1,0 +1,67 @@
+PANDUAN ADMIN - WEB KEJUTAN ULANG TAHUN
+========================================
+Semua pengaturan (nama, ucapan, tema, foto, video, lagu, konfeti, dsb.) sekarang diatur
+dari halaman  admin.html  dan disimpan di Google Sheet. File config.js hanya berisi
+alamat koneksi ke Google Sheet.
+
+HALAMAN-HALAMAN
+  index.html   halaman kejutan untuk yang berulang tahun
+  kirim.html   formulir untuk teman-teman (bagikan link ini)
+  admin.html   panel admin untuk Anda (jangan dibagikan)
+
+SETUP SEKALI SAJA (sekitar 5 menit, gratis)
+1. Buka sheets.google.com -> buat Spreadsheet baru.
+2. Extensions (Ekstensi) -> Apps Script. Hapus isi Code.gs, tempel seluruh isi file
+   google-sheet/Code.gs dari folder ini.
+3. GANTI baris:  const SANDI_ADMIN = "GANTI-SANDI-INI";  dengan sandi rahasia Anda. Klik Save.
+4. Pilih fungsi "setup" di atas editor -> Run -> izinkan akses
+   (Review permissions -> pilih akun -> Advanced -> Go to ... -> Allow).
+5. Deploy -> New deployment -> ikon roda gigi -> Web app
+      Execute as : Me      |      Who has access : Anyone
+   Klik Deploy, lalu COPY "Web app URL" (berakhiran /exec).
+6. Buka config.js, tempel URL itu pada  sheetUrl: "..."
+7. Upload seluruh folder ke Netlify (drag & drop di app.netlify.com/drop).
+8. Buka  https://situsmu.netlify.app/admin.html , masuk dengan sandi, atur semuanya, klik Simpan.
+
+NAMA FILE MEDIA (taruh di folder assets, lalu pilih nomornya di admin)
+  assets/photos/foto1.jpg  foto2.png  foto3.webp ... sampai foto9
+  assets/video/video1.mp4  video2.mp4 ... sampai video9
+  assets/music/lagu1.mp3   lagu2.mp3  ... sampai lagu9
+  (ekstensi jpg/jpeg/png/webp, mp4/webm/mov, mp3/m4a/ogg/wav dikenali otomatis)
+  Di admin akan terlihat tanda "✓ file ada" atau "file belum ada" untuk tiap nomor.
+  Ganti isi file = tinggal timpa file dengan nama yang sama, lalu upload ulang ke Netlify.
+  Rekaman suara teman dibatasi 45 detik (otomatis dikonversi ke WAV agar bisa diputar di semua HP).
+
+YANG BISA DIATUR DI ADMIN
+  - Nama, umur, pengirim, daftar ucapan utama, teks melingkar, teks berjalan
+  - Tema (50 pilihan atau Acak), tombol tema untuk penerima ya/tidak
+  - Latar: Video / Foto / Tulisan saja; foto & lingkaran foto ya/tidak, posisi kiri/kanan
+  - Konfeti: Meriah / Ringan / Mati; ornamen melayang ya/tidak
+  - Foto, video, dan musik dari folder assets lama (pilih nomor)
+  - Ucapan teman: tampil di slide / teks berjalan, tampilkan foto, moderasi, izinkan foto
+  - Daftar ucapan teman: dengarkan rekaman suara, sembunyikan / tampilkan / hapus
+  - Teman bisa merekam ucapan suara langsung dari HP/komputer; rekaman tersimpan di Google Drive dan diputar saat slide teman tampil. Musik otomatis mengecil selama ucapan suara.
+
+CATATAN
+  - Pastikan memakai Code.gs terbaru (ada fungsi audio_). Tanpa itu, suara teman tidak bisa diputar.
+  - Jika Code.gs diubah: Deploy -> Manage deployments -> Edit -> Version: New version -> Deploy.
+- Rekam suara memerlukan izin mikrofon dan halaman HTTPS (misalnya Netlify). Penerima harus tersambung internet untuk memutar file Drive.
+  - Halaman kejutan menyimpan salinan pengaturan di HP penerima supaya cepat dibuka; perubahan
+    dari admin otomatis terlihat saat halaman dibuka lagi.
+  - Tombol Simpan di admin berlaku untuk semua orang yang membuka link.
+
+CARA MEMASUKKAN FOTO, VIDEO, DAN MUSIK (MANUAL)
+1. Simpan file di folder assets dengan nama bernomor: assets/photos/foto1.jpg, assets/video/video1.mp4, assets/music/lagu1.mp3.
+   Video paling aman: MP4 H.264 + AAC. Foto disarankan lebar maksimal 1920 px.
+2. Di admin > Media: centang foto, pilih Video 1, centang lagu. Pastikan tertulis "✓ nama file" (bukan "file belum ada").
+   Di admin > Tampilan: Latar = Video.
+3. Klik Simpan Pengaturan, lalu upload seluruh folder ke Netlify. Ganti file = timpa dengan nama yang sama.
+Foto & rekaman suara dari teman (kirim.html) tetap tersimpan otomatis di Google Drive; itu tidak berubah.
+
+JIKA FILE TIDAK TERDETEKSI / TIDAK JALAN
+- Di admin > Media klik "🔎 Diagnosa file media": tampil alamat yang dicari dan status tiap file (404 = nama/lokasi salah).
+- Nama harus persis: foto1.jpg, video1.mp4, lagu1.mp3 (ekstensi huruf kecil/besar boleh; nama "foto1" huruf kecil).
+- Windows sering menyembunyikan ekstensi: file "foto1.jpg" bisa sebenarnya "foto1.jpg.jpg". Aktifkan View > File name extensions.
+- Folder harus berada di tempat yang sama dengan index.html: <folder web>/assets/photos, assets/video, assets/music.
+  Jika memakai folder uji-lokal, taruh juga di uji-lokal/assets (bukan hanya di folder ulangtahun).
+- Setelah menimpa file: Ctrl+F5. Penanda versi: admin "build 2026.10.18-bersih2", index di F12 Console "index build 2026.10.18-bersih2".
