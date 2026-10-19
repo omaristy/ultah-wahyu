@@ -49,6 +49,7 @@ textarea{resize:vertical;min-height:110px}
 button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--bd);background:#22222c;color:var(--tx);padding:9px 14px;transition:.2s}
 button:hover:not(:disabled){border-color:var(--ac)}
 button:disabled{opacity:.55;cursor:wait}
+.pgs{height:5px;border-radius:5px;background:#34343f;overflow:hidden;margin-top:8px}.pgs i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}.urow{display:flex;gap:8px;align-items:center}.urow input{flex:1;min-width:0}.urow button{white-space:nowrap;padding:9px 12px}
 .pr{background:linear-gradient(135deg,#b8902a,var(--ac) 40%,var(--ac2) 60%,var(--ac));color:#1a1305;border:0;font-weight:700;padding:13px 24px;font-size:15px;box-shadow:0 8px 24px #e6bd3a40}
 .bar{position:fixed;left:0;right:0;bottom:0;background:#0b0b10ee;backdrop-filter:blur(12px);border-top:1px solid var(--bd);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;z-index:8}
 #msg{font-size:13px;min-width:0}.ok{color:#7be08b}.er{color:#ff9b9b}
@@ -83,7 +84,7 @@ button:disabled{opacity:.55;cursor:wait}
 
   <!-- PANEL -->
   <div id="panel" hidden>
-    <div class="nav"><a href="#s-umum">👤 Umum</a><a href="#s-tulis">✍️ Tulisan</a><a href="#s-tampil">🎨 Tampilan</a><a href="#s-media">📁 Media</a><a href="#s-teman">💌 Teman</a><a href="#s-daftar">📋 Daftar</a></div>
+    <div class="nav"><a href="#s-umum">👤 Umum</a><a href="#s-tulis">✍️ Tulisan</a><a href="#s-tampil">🎨 Tampilan</a><a href="#s-media">📁 Media</a><a href="#s-teman">💌 Teman</a><a href="#s-wa">💬 WA</a><a href="#s-daftar">📋 Daftar</a></div>
     <div class="stats"><div><b id="stT">–</b><span>UCAPAN</span></div><div><b id="stV">–</b><span>DENGAN SUARA</span></div><div><b id="stS">–</b><span>TAMPIL</span></div></div>
     <div class="cd" id="s-umum"><h2>👤 Umum</h2>
       <div class="row"><div><label>Nama yang berulang tahun</label><input type="text" id="nama" maxlength="60"></div>
@@ -110,13 +111,24 @@ button:disabled{opacity:.55;cursor:wait}
     </div>
 
     <div class="cd" id="s-media"><h2>📁 Media (foto, video, lagu)</h2>
-      <p class="sm">Taruh file manual di folder dengan nama bernomor: <b>assets/photos/foto1.jpg</b>, <b>assets/video/video1.mp4</b>, <b>assets/music/lagu1.mp3</b> (jpg/png/webp, mp4/webm, mp3/m4a otomatis dikenali). Lalu pilih nomor yang dipakai. Tanda ✓ berarti file ditemukan.</p>
-      <p><button type="button" id="diag">🔎 Diagnosa file media</button></p><pre class="sm" id="diagHasil" style="white-space:pre-wrap;margin:0 0 10px"></pre>
-      <label>Foto yang dipakai</label><div class="g" id="foto"></div>
-      <label>Video latar (pastikan Latar = Video di bagian Tampilan)</label><div class="g" id="video"></div>
+      <p class="sm">Dua cara, bebas dipilih: <b>(1) Manual</b> — taruh file di <b>assets/photos/foto1.jpg</b>, <b>assets/video/video1.mp4</b>, <b>assets/music/lagu1.mp3</b> lalu pilih nomornya. <b>(2) Unggah ke Google Drive</b> dari sini — jika kolom URL Drive terisi, URL itu dipakai menggantikan file lokal. Klik ✖ Hapus URL untuk kembali ke file lokal. Untuk memakai video, atur Latar = Video di bagian Tampilan.</p>
+      <p><button type="button" id="cek">🩺 Tes koneksi &amp; versi Code.gs</button> <button type="button" id="diag">🔎 Diagnosa file lokal</button></p>
+      <div class="sm" id="cekHasil" style="margin-bottom:6px"></div><pre class="sm" id="diagHasil" style="white-space:pre-wrap;margin:0 0 10px"></pre>
+
+      <label>Unggah foto ke Google Drive (otomatis diperkecil)</label><input type="file" id="upFoto" accept="image/*">
+      <label>URL foto Drive yang dipakai</label><div class="urow"><input type="text" id="mediaFotoURL" placeholder="Otomatis terisi setelah upload"><button type="button" data-hapus="mediaFotoURL">✖ Hapus URL</button></div>
+      <label>Foto lokal yang dipakai (jika URL Drive kosong)</label><div class="g" id="foto"></div>
+
+      <label>Unggah video ke Google Drive (maksimal 18 MB; MP4 H.264 paling aman)</label><input type="file" id="upVideo" accept="video/*">
+      <label>URL video Drive yang dipakai</label><div class="urow"><input type="text" id="mediaVideoURL" placeholder="Otomatis terisi setelah upload"><button type="button" data-hapus="mediaVideoURL">✖ Hapus URL</button></div>
+      <label>Video lokal (jika URL Drive kosong)</label><div class="g" id="video"></div>
       <div class="sw"><span>Suara video ikut berbunyi<small>Jika mati, hanya lagu yang terdengar</small></span><input type="checkbox" id="videoSuara"></div>
-      <label>Lagu yang dipakai</label><div class="g" id="lagu"></div>
-      <p class="sm" style="opacity:.6">admin.html build 2026.10.18-bersih2</p>
+
+      <label>Unggah musik ke Google Drive (maksimal 18 MB)</label><input type="file" id="upLagu" accept="audio/*">
+      <div class="pgs" id="pgs" hidden><i></i></div>
+      <label>URL musik Drive yang dipakai</label><div class="urow"><input type="text" id="mediaLaguURL" placeholder="Otomatis terisi setelah upload"><button type="button" data-hapus="mediaLaguURL">✖ Hapus URL</button></div>
+      <label>Lagu lokal (jika URL Drive kosong)</label><div class="g" id="lagu"></div>
+      <p class="sm" style="opacity:.6">admin.html build 2026.10.19-wa</p>
     </div>
 
     <div class="cd" id="s-teman"><h2>💌 Ucapan dari teman</h2>
@@ -127,6 +139,14 @@ button:disabled{opacity:.55;cursor:wait}
       <div class="sw"><span>Izinkan teman mengirim foto di formulir</span><input type="checkbox" id="izinFoto"></div>
       <div class="sw"><span>Moderasi: ucapan baru tampil setelah saya setujui</span><input type="checkbox" id="moderasi"></div>
       <label>Cek ucapan baru tiap … detik (di halaman penerima)</label><input type="number" id="segarkan" min="15" max="600">
+    </div>
+
+    <div class="cd" id="s-wa"><h2>💬 Tombol WhatsApp</h2>
+      <p class="sm">Tombol hijau "Chat" muncul di halaman kejutan (bar atas + kartu di sampul) dan di halaman kirim ucapan. Saat diklik, WhatsApp terbuka ke nomor ini dengan pesan awal yang sudah terisi.</p>
+      <div class="sw"><span>Tampilkan tombol WhatsApp</span><input type="checkbox" id="waTampil"></div>
+      <label>Nomor WhatsApp (contoh 08123456789 atau 628123456789)</label><input type="text" id="waNomor" maxlength="20" inputmode="tel" placeholder="08123456789">
+      <label>Tulisan di tombol / kartu</label><input type="text" id="waTeks" maxlength="80">
+      <label>Pesan awal di chat (<b>{nama}</b> = nama yang berulang tahun)</label><input type="text" id="waPesan" maxlength="300">
     </div>
 
     <div class="cd" id="s-daftar"><h2>📋 Daftar ucapan teman</h2>
@@ -151,7 +171,7 @@ const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const okImg=u=>/^https:\/\/(drive\.google\.com|lh3\.googleusercontent\.com)\//.test(u);
 const DEF={nama:"Sahabat",umur:"",dari:"Teman-temanmu",ucapan:["Selamat ulang tahun! 🎉","Semoga panjang umur, sehat selalu, dan bahagia setiap hari."],teksMelingkar:"SELAMAT ULANG TAHUN ✦ HAPPY BIRTHDAY ✦ ",teksBerjalan:"Happy Birthday 🎂 Semoga semua impianmu terwujud 🎈",
   tema:"black-gold",tombolTema:true,lingkaranFoto:true,posisiFoto:"kanan",latar:"video",foto:[1,2,3],video:1,videoSuara:false,lagu:[1],
-  konfeti:"meriah",ornamen:true,teksTeman:true,slideTeman:true,fotoTeman:true,moderasi:false,izinFoto:true,segarkan:60};
+  konfeti:"meriah",ornamen:true,teksTeman:true,slideTeman:true,fotoTeman:true,moderasi:false,izinFoto:true,segarkan:60,mediaFotoURL:"",mediaVideoURL:"",mediaLaguURL:"",waNomor:"",waTeks:"Ingin kirim pesan? Chat ke nomor ini",waPesan:"Halo, saya ingin mengirim pesan untuk {nama}.",waTampil:true};
 let SANDI=sessionStorage.getItem("sandi")||"";
 async function post(o){const r=await fetch(SU,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({sandi:SANDI},o))});return r.json()}
 const msg=(t,c)=>{$("msg").textContent=t;$("msg").className=c||""};
@@ -171,8 +191,8 @@ function buatGrid(j,jenis,label){const el=$(j);el.innerHTML="";
 buatGrid("foto","checkbox","Foto");buatGrid("video","radio","Video");buatGrid("lagu","checkbox","Lagu");
 
 /* isi & ambil form */
-const BOOL=["tombolTema","lingkaranFoto","ornamen","videoSuara","slideTeman","teksTeman","fotoTeman","izinFoto","moderasi"];
-const TXT=["nama","umur","dari","teksMelingkar","teksBerjalan","tema","latar","konfeti","posisiFoto","segarkan"];
+const BOOL=["tombolTema","lingkaranFoto","ornamen","videoSuara","slideTeman","teksTeman","fotoTeman","izinFoto","moderasi","waTampil"];
+const TXT=["nama","umur","dari","teksMelingkar","teksBerjalan","tema","latar","konfeti","posisiFoto","segarkan","mediaFotoURL","mediaVideoURL","mediaLaguURL","waNomor","waTeks","waPesan"];
 function isi(p){p=Object.assign({},DEF,p);
   TXT.forEach(k=>{if(k!="tema")$(k).value=p[k]});
   $("tema").value=p.tema=="acak"?"acak":slug(TH[cariTema(p.tema)].n);
@@ -218,6 +238,87 @@ $("diag").onclick=async()=>{const o=$("diagHasil");o.textContent="Memeriksa…";
     t+="\n"}
   t+="Catatan: status 404 = nama/lokasi file salah; 0 = server tidak bisa dihubungi; 200 tetapi ✗ = server mengembalikan halaman HTML, bukan file.";
   o.textContent=t};
+
+/* tes koneksi ke Apps Script */
+$("cek").onclick=async()=>{const o=$("cekHasil");o.className="sm";o.textContent="Memeriksa…";
+  const u=SU+(SU.includes("?")?"&":"?")+"action=versi&t="+Date.now();
+  let r,txt;
+  try{r=await fetch(u);txt=await r.text()}
+  catch(e){o.className="er";o.innerHTML="❌ Browser tidak bisa menjangkau Apps Script. Penyebab paling umum: Deploy bukan <b>Who has access: Anyone</b> (bukan 'Anyone with Google account'), atau alamat <b>sheetUrl</b> di config.js salah/bukan yang berakhiran /exec.";return}
+  let d=null;try{d=JSON.parse(txt)}catch(e){}
+  if(!d){o.className="er";o.textContent="❌ Balasan bukan JSON (HTTP "+r.status+"): "+txt.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,200);return}
+  if(!d.versi||d.versi<"2026.10.19-wa"){o.className="er";o.innerHTML="⚠️ Code.gs di Apps Script belum versi terbaru"+(d.versi?" (sekarang: "+esc(d.versi)+")":"")+". Tempel Code.gs terbaru, Save, lalu Deploy → Manage deployments → ✏️ Edit → Version: <b>New version</b> → Deploy.";return}
+  o.className="ok";o.textContent="✓ Koneksi OK. Code.gs versi "+d.versi+". Upload ke Drive siap dipakai."};
+
+/* unggah media langsung ke Google Drive */
+const EKS={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",webp:"image/webp",gif:"image/gif",heic:"image/heic",mp4:"video/mp4",webm:"video/webm",mov:"video/quicktime",m4v:"video/mp4",mp3:"audio/mpeg",m4a:"audio/mp4",aac:"audio/aac",ogg:"audio/ogg",wav:"audio/wav"};
+const AWAL={foto:"image/",video:"video/",lagu:"audio/"};
+function tipeFile(f){const t=(f.type||"").toLowerCase();if(/^(image|video|audio)\//.test(t))return t;const m=f.name.toLowerCase().match(/\.([a-z0-9]+)$/);return (m&&EKS[m[1]])||t||"application/octet-stream"}
+/* PENTING: jangan pakai XHR + upload.onprogress: itu memicu preflight CORS yang ditolak Apps Script ("Koneksi gagal").
+   fetch dengan text/plain adalah "simple request" sehingga lolos. Progres dibuat simulasi. */
+async function kirimXHR(body,onp){
+  let p=0.03;const tick=setInterval(()=>{p+=(0.92-p)*0.04;onp(p)},400);
+  const c=new AbortController(),to=setTimeout(()=>c.abort(),300000);
+  try{
+    let r;
+    try{r=await fetch(SU,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:body,signal:c.signal})}
+    catch(e){throw new Error(e.name=="AbortError"?"Waktu habis. File terlalu besar untuk koneksi ini; coba file lebih kecil.":"Koneksi gagal. Periksa internet, pastikan sheetUrl di config.js benar dan Deploy memakai 'Who has access: Anyone'.")}
+    const txt=await r.text();let d=null;try{d=JSON.parse(txt)}catch(e){}
+    if(d)return d;
+    const t=txt.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,160);
+    throw new Error("Server tidak membalas JSON (HTTP "+r.status+"). Biasanya Code.gs belum di-deploy ulang sebagai New version. "+t)
+  }finally{clearInterval(tick);clearTimeout(to)}}
+function tampilHasil(targetId,d,type){
+  $(targetId).value=d.url;
+  let pv=$("pv-"+targetId);if(!pv){pv=document.createElement("div");pv.id="pv-"+targetId;pv.className="sm";pv.style.margin="6px 0";$(targetId).closest(".urow").after(pv)}
+  const thumb="https://drive.google.com/thumbnail?id="+encodeURIComponent(d.id)+"&sz=w400";
+  pv.innerHTML=(type=="foto"?`<img src="${thumb}" alt="" style="max-width:140px;max-height:100px;border-radius:8px;display:block;margin-bottom:4px">`:"")
+    +`✓ ${esc(d.nama||"File")} tersimpan di Drive. <a href="${esc(d.url)}" target="_blank" rel="noopener" style="color:inherit">Uji buka URL ↗</a> · <a href="#" data-salin="${esc(d.url)}" style="color:inherit">Salin URL</a>`;
+  const sl=pv.querySelector("[data-salin]");
+  sl.onclick=e=>{e.preventDefault();const u=sl.dataset.salin;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>sl.textContent="Tersalin ✓").catch(()=>{$(targetId).select();document.execCommand("copy");sl.textContent="Tersalin ✓"})}}
+/* perkecil foto (maks 1920 px, JPEG) agar upload & pemuatan cepat */
+async function kecilkanFoto(file){
+  try{
+    const url=URL.createObjectURL(file);
+    const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=url});
+    const M=1920,r=Math.min(1,M/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.round(img.naturalWidth*r),h=Math.round(img.naturalHeight*r);
+    const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);URL.revokeObjectURL(url);
+    const blob=await new Promise(ok=>c.toBlob(ok,"image/jpeg",.88));
+    if(blob&&blob.size<file.size)return{blob:blob,nama:file.name.replace(/\.[^.]+$/,"")+".jpg",tipe:"image/jpeg"};
+  }catch(e){}
+  return{blob:file,nama:file.name,tipe:tipeFile(file)}}
+/* cek apakah browser ini bisa memutar video (HEVC/H.265 dari HP sering tidak bisa) */
+function cekVideo(file){return new Promise(ok=>{const u=URL.createObjectURL(file),v=document.createElement("video");let t;
+  const sel=r=>{clearTimeout(t);URL.revokeObjectURL(u);ok(r)};
+  v.preload="metadata";v.muted=true;v.onloadedmetadata=()=>sel(v.videoWidth>0);v.onerror=()=>sel(false);t=setTimeout(()=>sel(true),8000);v.src=u})}
+async function uploadDrive(type,inputId,targetId){
+  const input=$(inputId),file=input.files[0];if(!file)return;
+  const tipe=tipeFile(file);
+  if(tipe.indexOf(AWAL[type])!==0){msg("Gagal: file '"+file.name+"' bukan "+(type=="foto"?"gambar":type=="video"?"video":"audio")+" (terdeteksi: "+tipe+").","er");input.value="";return}
+  if(file.size>18*1024*1024){msg("Gagal: ukuran "+(file.size/1048576).toFixed(1)+" MB melebihi 18 MB. Kompres dulu, atau gunakan file manual di folder assets.","er");input.value="";return}
+  if(!SU){msg("Isi dulu sheetUrl di config.js.","er");return}
+  if(!SANDI){msg("Sesi habis. Muat ulang halaman dan masuk lagi.","er");return}
+  msg("Menyiapkan "+file.name+"…");const pg=$("pgs");pg.hidden=false;pg.firstChild.style.width="3%";input.disabled=true;
+  try{
+    let kirim={blob:file,nama:file.name,tipe:tipe};if(type=="foto"){msg("Memperkecil foto…");kirim=await kecilkanFoto(file)}
+    const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]||"");r.onerror=()=>no(new Error("Gagal membaca file"));r.readAsDataURL(kirim.blob)});
+    if(!b64)throw new Error("File kosong atau tidak terbaca");
+    const body=JSON.stringify({sandi:SANDI,aksi:"uploadMedia",namaFile:kirim.nama,tipe:kirim.tipe,data:b64,jenis:type});
+    const onp=p=>{pg.firstChild.style.width=Math.max(3,p*96)+"%";msg("Mengunggah "+file.name+"… "+Math.round(p*100)+"%")};
+    let d;try{d=await kirimXHR(body,onp)}catch(e){msg("Mencoba ulang…");d=await kirimXHR(body,onp)}
+    if(!d.ok){let m=d.error||"Upload gagal";if(/Aksi tidak dikenal/.test(m))m="Code.gs di Apps Script masih versi lama. Salin Code.gs terbaru, lalu Deploy → Manage deployments → Edit → Version: New version → Deploy.";throw new Error(m)}
+    if(!d.url||!d.id)throw new Error("Server tidak mengembalikan URL. Deploy ulang Code.gs terbaru.");
+    pg.firstChild.style.width="100%";tampilHasil(targetId,d,type);
+    let okV=true;if(type=="video"){okV=await cekVideo(file);if($("latar"))$("latar").value="video"}
+    msg(okV?"✓ Berhasil diunggah, URL sudah terisi. Klik Simpan Pengaturan.":"⚠ Terunggah, tetapi browser ini TIDAK bisa memutar video tersebut (kemungkinan codec HEVC/H.265). Ubah ke MP4 H.264 lalu unggah ulang.",okV?"ok":"er");setTimeout(()=>pg.hidden=true,1500)
+  }catch(e){pg.hidden=true;msg("Upload gagal: "+e.message,"er")}
+  finally{input.disabled=false;input.value=""}
+}
+$("upFoto").onchange=()=>uploadDrive("foto","upFoto","mediaFotoURL");
+$("upVideo").onchange=()=>uploadDrive("video","upVideo","mediaVideoURL");
+$("upLagu").onchange=()=>uploadDrive("lagu","upLagu","mediaLaguURL");
+document.querySelectorAll("[data-hapus]").forEach(b=>b.onclick=()=>{const id=b.dataset.hapus;$(id).value="";const pv=$("pv-"+id);if(pv)pv.remove();msg("URL dihapus: kembali memakai file lokal. Klik Simpan Pengaturan.","ok")});
+
 /* daftar ucapan teman */
 const PL={};
 async function muat(){$("daftar").textContent="Memuat…";

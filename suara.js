@@ -29,6 +29,24 @@
         return {buf:await r.arrayBuffer(),mime:r.headers.get("content-type")||"audio/wav"}}catch(e){throw err||e}
     })();
     cache.set(key,p);p.catch(()=>cache.delete(key));return p}
+  /* Muat file Drive (foto/musik/video) per potongan lewat Apps Script -> Blob. 3 potongan paralel, tiap potongan dicoba ulang. */
+  const cacheC=new Map();
+  function ambilBagi(raw){
+    const id=driveId(raw);if(!id||!SU)return Promise.reject(new Error("URL media tidak valid"));
+    if(cacheC.has(id))return cacheC.get(id);
+    const url=n=>SU+(SU.includes("?")?"&":"?")+"action=media&id="+encodeURIComponent(id)+"&part="+n+"&t="+Date.now();
+    const bagian=async n=>{let err;for(let k=0;k<3;k++){
+      try{const r=await timed(url(n),60000),d=await r.json();
+        if(!d.ok)throw new Error(d.error||"gagal");
+        if(!d.data)throw new Error("Code.gs di Apps Script masih versi lama (belum ada action=media). Deploy New version.");
+        return d}catch(e){err=e;await new Promise(r=>setTimeout(r,900))}}throw err};
+    const p=(async()=>{
+      const d0=await bagian(0),parts=d0.parts||1,out=new Array(parts);out[0]=b64(d0.data);let next=1;
+      const worker=async()=>{while(next<parts){const n=next++;out[n]=b64((await bagian(n)).data)}};
+      await Promise.all([worker(),worker(),worker()]);
+      return {blob:new Blob(out,{type:d0.mime||"application/octet-stream"}),mime:d0.mime}})();
+    cacheC.set(id,p);p.catch(()=>cacheC.delete(id));return p}
   window.Suara={driveId,direct,ambil,SILENT,
+    blobUrlBagi:async raw=>URL.createObjectURL((await ambilBagi(raw)).blob),
     blobUrl:async raw=>{const d=await ambil(raw);return URL.createObjectURL(new Blob([d.buf],{type:d.mime}))}};
 })();

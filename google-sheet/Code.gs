@@ -4,7 +4,7 @@
 // >>> WAJIB GANTI sandi ini, lalu Deploy. Sandi dipakai untuk masuk ke admin.html <<<
 const SANDI_ADMIN = "1111";
 
-const VERSI = "2026.10.18-bersih";
+const VERSI = "2026.10.19-wa";
 const NAMA_SHEET = "Ucapan", SHEET_SET = "Pengaturan", NAMA_FOLDER = "Foto Ucapan Ulang Tahun";
 
 function ss_() { return SpreadsheetApp.getActiveSpreadsheet(); }
@@ -26,6 +26,18 @@ function folder_() {
 }
 function out_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 function clean_(v, n) { return String(v || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, n); }
+// Tentukan tipe MIME dari ekstensi bila browser tidak mengirim tipe (sering kosong untuk mp3/m4a/mov/webp di HP)
+const EKS_ = { jpg:"image/jpeg", jpeg:"image/jpeg", png:"image/png", webp:"image/webp", gif:"image/gif", heic:"image/heic",
+  mp4:"video/mp4", webm:"video/webm", mov:"video/quicktime", m4v:"video/mp4",
+  mp3:"audio/mpeg", m4a:"audio/mp4", aac:"audio/aac", ogg:"audio/ogg", oga:"audio/ogg", wav:"audio/wav", weba:"audio/webm" };
+function tipeMedia_(tipe, nama) {
+  const t = String(tipe || "").toLowerCase().split(";")[0].trim();
+  if (/^(image|video|audio)\//.test(t)) return t;
+  const m = String(nama || "").toLowerCase().match(/\.([a-z0-9]+)$/);
+  return (m && EKS_[m[1]]) || t || "application/octet-stream";
+}
+function mediaUrl_(v) { const u = String(v || "").trim(); return /^https:\/\/drive\.google\.com\/(uc\?|file\/d\/)/.test(u) ? u.slice(0, 500) : ""; }
+
 // ---- pengaturan (disimpan di tab "Pengaturan") ----
 function getSet_() {
   const sh = ss_().getSheetByName(SHEET_SET);
@@ -51,7 +63,9 @@ function bersih_(p) {
     foto: nums(p.foto), video: Math.max(0, Math.min(9, +p.video || 0)), videoSuara: b(p.videoSuara), lagu: nums(p.lagu),
     konfeti: ["meriah", "ringan", "mati"].indexOf(p.konfeti) >= 0 ? p.konfeti : "meriah", ornamen: b(p.ornamen),
     teksTeman: b(p.teksTeman), slideTeman: b(p.slideTeman), fotoTeman: b(p.fotoTeman),
-    moderasi: b(p.moderasi), izinFoto: b(p.izinFoto), segarkan: Math.max(15, Math.min(600, +p.segarkan || 60))
+    moderasi: b(p.moderasi), izinFoto: b(p.izinFoto), segarkan: Math.max(15, Math.min(600, +p.segarkan || 60)),
+    mediaFotoURL: mediaUrl_(p.mediaFotoURL), mediaVideoURL: mediaUrl_(p.mediaVideoURL), mediaLaguURL: mediaUrl_(p.mediaLaguURL),
+    waNomor: String(p.waNomor || "").replace(/\D/g, "").slice(0, 15), waTeks: s(p.waTeks, 80), waPesan: s(p.waPesan, 300), waTampil: b(p.waTampil)
   };
 }
 
@@ -79,6 +93,24 @@ function audio_(id) {
 }
 
 
+// Kirim file media per potongan (base64) agar file besar tidak melebihi batas respons/waktu Apps Script.
+function mediaPart_(id, part, size) {
+  id = String(id || "").trim();
+  if (!/^[\w-]{10,}$/.test(id)) return { ok: false, error: "ID tidak valid" };
+  const f = DriveApp.getFileById(id);
+  const folderId = folder_().getId(), ps = f.getParents();
+  let boleh = false;
+  while (ps.hasNext()) { if (ps.next().getId() === folderId) { boleh = true; break; } }
+  if (!boleh) return { ok: false, error: "Tidak diizinkan" };
+  const blob = f.getBlob(), mime = String(blob.getContentType() || "");
+  if (mime.indexOf("audio/") !== 0 && mime.indexOf("video/") !== 0 && mime.indexOf("image/") !== 0) return { ok: false, error: "Bukan file media" };
+  const bytes = blob.getBytes(), total = bytes.length;
+  if (total > 19000000) return { ok: false, error: "File terlalu besar" };
+  size = Math.max(500000, Math.min(3000000, Number(size) || 2400000));
+  const parts = Math.max(1, Math.ceil(total / size)), n = Math.max(0, Math.min(parts - 1, Number(part) || 0));
+  return { ok: true, mime: mime, total: total, parts: parts, part: n, data: Utilities.base64Encode(bytes.slice(n * size, Math.min(total, (n + 1) * size))) };
+}
+
 function setup() { sh_(); folder_(); if (!ss_().getSheetByName(SHEET_SET)) putSet_({}); }
 
 // ---- baca (publik) ----
@@ -88,6 +120,7 @@ function doGet(e) {
     if (a === "init") return out_({ ok: true, pengaturan: getSet_(), items: items_() });
     if (a === "list") return out_({ ok: true, items: items_() });
     if (a === "audio") return out_(audio_(e.parameter.id));
+    if (a === "media") return out_(mediaPart_(e.parameter.id, e.parameter.part, e.parameter.size));
     if (a === "versi") return out_({ ok: true, versi: VERSI });
     return out_({ ok: true, info: "aktif", versi: VERSI });
   } catch (err) { return out_({ ok: false, error: String(err) }); }
@@ -131,6 +164,21 @@ function doPost(e) {
     if (SANDI_ADMIN === "GANTI-SANDI-INI") return out_({ ok: false, error: "Ganti dulu SANDI_ADMIN di Code.gs lalu Deploy ulang" });
     if (String(d.sandi || "") !== SANDI_ADMIN) { Utilities.sleep(800); return out_({ ok: false, error: "Sandi salah" }); }
 
+    if (aksi === "uploadMedia") {
+      const jenis = String(d.jenis || "");
+      if (["foto", "video", "lagu"].indexOf(jenis) < 0) return out_({ ok: false, error: "Jenis media tidak valid" });
+      if (!d.data) return out_({ ok: false, error: "Data file kosong" });
+      if (d.data.length > 26000000) return out_({ ok: false, error: "File terlalu besar. Maksimal 18 MB." });
+      const nama = clean_(d.namaFile, 100) || (jenis + "_" + Date.now());
+      const tipe = tipeMedia_(d.tipe, nama);
+      const awal = { foto: "image/", video: "video/", lagu: "audio/" }[jenis];
+      if (tipe.indexOf(awal) !== 0) return out_({ ok: false, error: "Tipe file (" + tipe + ") tidak sesuai kategori " + jenis });
+      const blob = Utilities.newBlob(Utilities.base64Decode(d.data), tipe, nama);
+      const f = folder_().createFile(blob);
+      f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      const id = f.getId();
+      return out_({ ok: true, id: id, url: "https://drive.google.com/uc?export=download&id=" + id, nama: nama, tipe: tipe, versi: VERSI });
+    }
     if (aksi === "masuk") return out_({ ok: true, pengaturan: getSet_() });
     if (aksi === "simpan") { putSet_(bersih_(d.pengaturan)); return out_({ ok: true }); }
 

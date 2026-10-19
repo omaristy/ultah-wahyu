@@ -17,6 +17,14 @@ body.playing .orn{z-index:4;opacity:.55}
 @keyframes up{to{transform:translateY(-120vh) rotate(40deg)}}
 .top{position:fixed;top:0;left:0;right:0;z-index:6;display:flex;justify-content:space-between;gap:8px;padding:12px 14px}
 .pill{background:color-mix(in srgb,var(--b1) 55%,transparent);color:var(--tx);border:1px solid var(--ac);border-radius:30px;padding:8px 14px;font:500 13px Poppins;cursor:pointer;backdrop-filter:blur(8px)}
+/* info WhatsApp: kecil & halus (ikon di bar atas + satu baris teks di sampul), tidak menutupi tampilan */
+.pill.wa{align-items:center;gap:0;padding:7px 9px;color:#25d366;text-decoration:none;opacity:.7;transition:opacity .3s,gap .3s}
+.pill.wa svg{width:18px;height:18px;flex:none;fill:currentColor}
+.pill.wa .lb{max-width:0;overflow:hidden;white-space:nowrap;font:500 12px Poppins;color:var(--tx);transition:max-width .35s ease}
+.pill.wa:hover,.pill.wa:focus-visible{opacity:1;gap:6px}.pill.wa:hover .lb,.pill.wa:focus-visible .lb{max-width:230px}
+.wa-info{margin:4px auto 0;padding:2px 8px;font:400 11.5px/1.4 Poppins,sans-serif;color:var(--tx);opacity:.55;text-decoration:underline;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,#25d366 70%,transparent);text-align:center;max-width:92vw}
+.wa-info:hover{opacity:.95}
+@media (max-height:560px){.wa-info{display:none!important}}
 #cover{position:relative;z-index:2;height:100%;max-width:760px;margin:auto;padding:56px 22px 46px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s}
 #cover>*{animation:rise 1.1s cubic-bezier(.2,.8,.2,1) both}
 #cover>:nth-child(2){animation-delay:.1s}#cover>:nth-child(3){animation-delay:.2s}#cover>:nth-child(4){animation-delay:.32s}#cover>:nth-child(5){animation-delay:.46s}#cover>:nth-child(6){animation-delay:.6s}
@@ -101,6 +109,28 @@ button.vchip{cursor:pointer}
 body:has(#show.gmode) .orn{opacity:.18;transition:opacity 1s}
 .gl{width:min(60vw,260px);height:2px;border:0;background:linear-gradient(90deg,transparent,var(--ac),transparent)}
 .gmsg{font-size:clamp(17px,4.5vw,30px);line-height:1.45;display:flex;flex-wrap:wrap;justify-content:inherit;gap:.05em .3em;font-weight:var(--fw)}
+
+/* ===== slide teman: responsif HP & PC ===== */
+#show.gmode .stage{justify-content:center;padding-top:48px}
+#show.gmode .line{max-width:none;width:100%;min-height:0}
+.gst{--fh:30vh;width:100%;max-width:min(94vw,1280px);margin-inline:auto;gap:clamp(12px,2.4vh,22px)}
+.gf img{max-width:min(64vw,330px);max-height:var(--fh)}
+.gb{width:100%;max-width:min(92vw,640px);padding:20px 20px 22px;gap:clamp(6px,1.4vh,12px)}
+.gn{font-size:clamp(24px,7vw,38px)}
+.gn span{text-wrap:balance}
+@media (max-aspect-ratio:1/1){.gmsg.ctr{justify-content:center;text-align:center}}
+.gmsg{font-size:clamp(16px,4.6vw,28px);line-height:1.5;max-width:100%;text-wrap:pretty;overflow-wrap:anywhere}
+#show.gmode .ringbox{opacity:0;transition:opacity .5s}
+body:has(#show.gmode) canvas#cf{z-index:2}  /* saat slide teman: konfeti di belakang kartu agar tulisan tetap jelas */
+@media (min-aspect-ratio:1/1){
+  .gst{--fh:64vh;gap:clamp(24px,3.2vw,56px);justify-content:center;align-items:center}
+  .gf img{max-width:min(36vw,560px);max-height:var(--fh)}
+  .gf.med{width:clamp(120px,14vw,220px);font-size:clamp(60px,7vw,110px)}
+  .gb{width:auto;flex:0 1 auto;max-width:min(54vw,860px);min-width:min(40vw,360px);padding:26px 34px 30px}
+  .gn{font-size:clamp(28px,3.4vw,58px)}
+  .gmsg{font-size:clamp(18px,1.9vw,34px)}
+}
+@media (max-height:480px) and (min-aspect-ratio:1/1){.gb{padding:14px 22px}.gf img{max-height:58vh}}
 .tp{position:fixed;top:54px;left:10px;right:10px;max-width:480px;max-height:68vh;overflow:auto;z-index:7;display:none;padding:12px;border-radius:18px;border:1px solid var(--ac);background:color-mix(in srgb,var(--b1) 94%,transparent);backdrop-filter:blur(14px)}
 .tp.open{display:block}
 .tp h4{color:var(--ac);font:500 12px Poppins;letter-spacing:2px;text-transform:uppercase;margin:12px 4px 4px}
@@ -120,7 +150,7 @@ body:has(#show.gmode) .orn{opacity:.18;transition:opacity 1s}
 <canvas id="cf"></canvas>
 <div class="top">
   <button class="pill" id="tema">🎨 Tema</button>
-  <span><button class="pill" id="lagu" style="display:none">🎵</button> <button class="pill" id="mute" style="display:none">🔊</button></span>
+  <span><button class="pill" id="lagu" style="display:none">🎵</button> <button class="pill" id="mute" style="display:none">🔊</button> <a class="pill wa" id="waTop" href="#" target="_blank" rel="noopener" style="display:none" aria-label="Ingin pesan ucapan seperti ini? Klik untuk chat WhatsApp" title="Ingin pesan ucapan seperti ini? Klik untuk chat WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span class="lb" id="waLb"></span></a></span>
 </div>
 
 <div class="tp" id="tp"></div>
@@ -136,6 +166,7 @@ body:has(#show.gmode) .orn{opacity:.18;transition:opacity 1s}
   </div>
   <button class="btn gold" id="buka" disabled>⏳ Menyiapkan kejutan…</button>
   <p class="hint">🔊 Nyalakan suara untuk pengalaman terbaik</p>
+  <a class="wa-info" id="waCover" href="#" target="_blank" rel="noopener" style="display:none"><span id="waLabel"></span></a>
 </div>
 
 <div id="show">
@@ -155,13 +186,13 @@ body:has(#show.gmode) .orn{opacity:.18;transition:opacity 1s}
 <script src="efek.js"></script>
 <script src="suara.js"></script>
 <script>
-console.info("index build 2026.10.18-bersih2");
+console.info("index build 2026.10.19-wa2");
 const $=id=>document.getElementById(id),q=new URLSearchParams(location.search),wait=ms=>new Promise(r=>setTimeout(r,ms));
 const SU=(window.CONFIG||{}).sheetUrl||"";
 const DEF={nama:"Sahabat",umur:"",dari:"Teman-temanmu",ucapan:["Selamat ulang tahun! 🎉","Semoga panjang umur, sehat selalu, dan bahagia setiap hari.","Terima kasih sudah menjadi bagian indah dalam hidup kami. ❤️"],
   teksMelingkar:"SELAMAT ULANG TAHUN ✦ HAPPY BIRTHDAY ✦ ",teksBerjalan:"Happy Birthday 🎂 Semoga semua impianmu terwujud 🎈 Bahagia selalu 🎁",
   tema:"black-gold",tombolTema:true,lingkaranFoto:true,posisiFoto:"kanan",latar:"video",foto:[1,2,3],video:1,videoSuara:false,lagu:[1],
-  konfeti:"meriah",ornamen:true,teksTeman:true,slideTeman:true,fotoTeman:true,segarkan:60};
+  konfeti:"meriah",ornamen:true,teksTeman:true,slideTeman:true,fotoTeman:true,segarkan:60,mediaFotoURL:"",mediaVideoURL:"",mediaLaguURL:"",waNomor:"",waTeks:"",waPesan:"",waTampil:true};
 let C=Object.assign({},DEF),T=TH[0],ITEMS=[],FOTO=[],ML=[],VID=null,imgs=[],si=0,fi=0,mi=0,applied=false;
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const okImg=u=>/^https:\/\/(drive\.google\.com|lh3\.googleusercontent\.com)\//.test(u);
@@ -207,23 +238,54 @@ function setupFoto(){clearInterval(fi);fr.querySelectorAll("img").forEach(e=>e.r
   fi=setInterval(()=>{if(imgs.length<2)return;imgs[si].classList.remove("on");si=(si+1)%imgs.length;imgs[si].classList.add("on");setBg(FOTO[si])},3500)}
 
 /* ---- teks berjalan ---- */
-function ribbon(){const g=C.teksTeman?guests().map(x=>`💌 ${x.nama}: ${cut(x.pesan,90)}`):[];
+/* ---- ucapan dari teman (kirim.html): SETIAP ucapan hanya tampil SEKALI (slide & teks berjalan).
+        Ucapan yang diketik di admin (ucapan utama & teks berjalan) berjalan terus. ---- */
+const gkey=x=>x.nama+"|"+x.pesan+"|"+x.suara;
+const shown=new Set(),tickSeen=new Set();let tickShow=[],tickT=0,tickOn=false;
+function restartRun(){const r=$("run");r.style.animation="none";void r.offsetWidth;r.style.animation=""}
+function ribbon(){const g=tickShow.map(x=>`💌 ${x.nama}: ${cut(x.pesan,90)}`);
   const t=[C.teksBerjalan,...g].filter(Boolean).join("   ✦   ")+"   ✦   ";
-  $("run").textContent=t.repeat(2);$("run").style.animationDuration=Math.max(22,t.length*.2)+"s";
+  const isi=g.length?t:t.repeat(2);   /* ada ucapan teman: satu salinan saja agar tampil sekali */
+  if($("run").dataset.t!==isi){$("run").dataset.t=isi;$("run").textContent=isi;$("run").style.animationDuration=Math.max(22,t.length*.2)+"s"}
   document.querySelector(".run").style.display=(C.teksBerjalan||g.length)?"":"none"}
+function tickNext(){ /* satu kali gulir untuk ucapan teman yang belum pernah tampil di teks berjalan */
+  if(!tickOn||!C.teksTeman||tickShow.length)return;
+  const b=guests().filter(x=>!tickSeen.has(gkey(x)));if(!b.length)return;
+  tickShow=b;ribbon();restartRun();
+  const dur=parseFloat($("run").style.animationDuration)||22;
+  clearTimeout(tickT);tickT=setTimeout(()=>{b.forEach(x=>tickSeen.add(gkey(x)));tickShow=[];ribbon();restartRun();tickNext()},dur*1000+300)}
+
+/* ---- tombol WhatsApp ---- */
+function waNo(n){let d=String(n||"").replace(/\D/g,"");if(d.startsWith("00"))d=d.slice(2);if(d.startsWith("0"))d="62"+d.slice(1);else if(d.startsWith("8"))d="62"+d;return /^\d{8,15}$/.test(d)?d:""}
+const WA_T="Ingin pesan ucapan seperti ini? Klik di sini",WA_P="Halo, saya melihat web ucapan ulang tahun untuk {nama} dan ingin memesan yang seperti ini.";
+const waTeks=t=>!t||t==="Ingin kirim pesan? Chat ke nomor ini"?WA_T:t,waPesan=t=>!t||t==="Halo, saya ingin mengirim pesan untuk {nama}."?WA_P:t;
+function waTerapkan(){const d=waNo(C.waNomor||(window.CONFIG||{}).waNomor),on=C.waTampil!==false&&!!d;
+  const url=on?"https://wa.me/"+d+"?text="+encodeURIComponent(waPesan(C.waPesan).replace(/\{nama\}/g,C.nama||"")):"";
+  $("waTop").style.display=on?"inline-flex":"none";$("waCover").style.display=on?"block":"none";
+  if(on){$("waTop").href=$("waCover").href=url;$("waLabel").textContent=waTeks(C.waTeks);$("waLb").textContent="Pesan ucapan seperti ini"}}
 
 /* ---- terapkan pengaturan ---- */
 async function terapkan(){applied=true;
   setTema(cariTema(C.tema));
   const nm=`<em class="shine">${esc(C.nama)}</em>`+(C.umur?` <small style="font-size:.5em">(${esc(C.umur)} th)</small>`:"");
-  $("judul").innerHTML=nm;$("j2").innerHTML=nm;
+  $("judul").innerHTML=nm;$("j2").innerHTML=nm;waTerapkan();
   let rt=C.teksMelingkar||"✦ ";while(rt.length<46)rt+=C.teksMelingkar||"✦ ";$("ring").textContent=rt;
   $("rb").style.display=C.lingkaranFoto?"":"none";$("rb").classList.toggle("kiri",C.posisiFoto=="kiri");
   $("tema").style.display=C.tombolTema?"":"none";
   ribbon();
-  FOTO=(await Promise.all((C.foto||[]).map(n=>cari("foto",n)))).filter(Boolean);setupFoto();
-  ML=(await Promise.all((C.lagu||[]).map(n=>cari("lagu",n)))).filter(Boolean);mi=0;
-  VID=(C.latar=="video"&&C.video)?await cari("video",C.video):null}
+  /* URL Drive (bila terisi) dipakai menggantikan file lokal; bila kosong -> file di folder assets */
+  const driveOk=u=>/^https:\/\/drive\.google\.com\/(uc\?|file\/d\/)/.test(String(u||""));
+  const thumb=u=>{const id=Suara.driveId(u);return id?"https://drive.google.com/thumbnail?id="+encodeURIComponent(id)+"&sz=w2000":u};
+  const lomba=(p,ms)=>Promise.race([p,new Promise((_,no)=>setTimeout(()=>no(new Error("timeout")),ms))]);
+  const lokal=async(j,arr)=>(await Promise.all((arr||[]).map(n=>cari(j,n)))).filter(Boolean);
+  if(driveOk(C.mediaFotoURL)){let f;try{f=await lomba(Suara.blobUrlBagi(C.mediaFotoURL),20000)}catch(e){console.warn("foto Drive gagal dimuat:",e&&e.message);f=thumb(C.mediaFotoURL)}FOTO=[f]}
+  else FOTO=await lokal("foto",C.foto);
+  setupFoto();
+  ML=driveOk(C.mediaLaguURL)?[C.mediaLaguURL]:await lokal("lagu",C.lagu);mi=0;
+  VID=null;ribbon();
+  if(C.latar=="video"){if(driveOk(C.mediaVideoURL))VID=C.mediaVideoURL;else if(C.video)VID=await cari("video",C.video)}
+  ML.forEach((u,i)=>{if(Suara.driveId(u))Suara.blobUrlBagi(u).then(bu=>{if(ML[i]===u)ML[i]=bu}).catch(e=>console.warn("musik Drive gagal dimuat:",e&&e.message))});
+  if(VID&&Suara.driveId(VID)){const v0=VID;Suara.blobUrlBagi(v0).then(bu=>{if(VID===v0)VID=bu}).catch(e=>console.warn("video Drive gagal dimuat:",e&&e.message))}}
 
 async function boot(){
   let cache=null;try{cache=JSON.parse(localStorage.getItem("cfg"))}catch(e){}
@@ -235,10 +297,29 @@ async function boot(){
   if(cache)await terapkan();else{await Promise.race([done,wait(6500)]);if(!applied)await terapkan()}
   $("buka").disabled=false;$("buka").textContent="🎁 Buka Ucapan";
   if(C.konfeti!="mati")setTimeout(burst,300);
-  if(SU)setInterval(()=>api("action=list").then(d=>{if(d&&d.ok){ITEMS=d.items.map(norm);ribbon();prefetch()}}).catch(()=>{}),Math.max(15,+C.segarkan||60)*1000)}
+  if(SU)setInterval(()=>api("action=list").then(d=>{if(d&&d.ok){ITEMS=d.items.map(norm);ribbon();tickNext();prefetch()}}).catch(()=>{}),Math.max(15,+C.segarkan||60)*1000)}
 
 /* ---- musik ---- */
-const au=$("au"),load=()=>{au.src=ML[mi]};
+/* menyesuaikan ukuran huruf/foto agar kartu teman selalu muat di layar (HP maupun PC) */
+function fitGuest(){
+  const box=document.querySelector("#line .gst");if(!box)return;
+  const msg=box.querySelector(".gmsg");if(!msg)return;
+  const W=innerWidth,H=innerHeight,land=W/H>=1,avail=H-(W<700?140:120);
+  const n=(msg.textContent||"").length;
+  let fs=land?Math.max(18,Math.min(40,W*.024)):Math.max(17,Math.min(30,W*.062));
+  fs*=n<=60?1.2:n<=140?1.05:n<=260?.9:.8;
+  let fh=land?64:30;
+  msg.style.fontSize=fs.toFixed(1)+"px";box.style.setProperty("--fh",fh+"vh");
+  for(let k=0;k<80&&box.offsetHeight>avail;k++){
+    if(fs>14){fs-=1;msg.style.fontSize=fs+"px"}
+    else if(fh>14){fh-=2;box.style.setProperty("--fh",fh+"vh")}
+    else break}}
+addEventListener("resize",()=>fitGuest());
+
+const au=$("au");let auFb="";
+const load=()=>{auFb="";au.src=ML[mi]};
+au.addEventListener("error",async()=>{const u=ML[mi];if(!Suara.driveId(u)||auFb===u)return;auFb=u;
+  try{const b=await Suara.blobUrlBagi(u);au.src=b;au.play().catch(()=>{})}catch(e){console.warn("musik Drive gagal:",e&&e.message)}});
 $("lagu").onclick=()=>{mi=(mi+1)%ML.length;load();au.play().catch(()=>{})};
 $("mute").onclick=()=>{au.muted=!au.muted;$("mute").textContent=au.muted?"🔇":"🔊"};
 
@@ -285,13 +366,18 @@ function chip(state,txt,fn){const c=$("vchip");if(!c)return;c.dataset.s=state;$(
 async function scenes(){
   const L=[`Selamat Ulang Tahun, ${C.nama}! 🎂`,...(C.ucapan||[])];if(C.dari)L.push(`Dengan cinta, ${C.dari} 💝`);
   const el=$("line");let li=0,gi=0,g=false;
+  /* Ucapan teman: tiap ucapan tampil SEKALI saja. Setelah semuanya tampil, hanya ucapan utama (dari admin) yang berputar terus. */
+  const Q=[];
   while(1){
     const an=ANIM[T.a][(li+gi)%3],gs=C.slideTeman?guests():[];
-    if(g&&gs.length){
-      const x=gs[gi++%gs.length],m=cut(x.pesan,260).split(" ");
+    gs.forEach(x=>{const k=gkey(x);if(!shown.has(k)&&!Q.some(q=>gkey(q)===k))Q.push(x)});
+    if(g&&Q.length){
+      const x=Q.shift();shown.add(gkey(x));gi++;const pesan=cut(x.pesan,500),m=pesan.split(" "),stp=Math.min(.12,4/Math.max(1,m.length));
       el.className="line";$("show").classList.add("gmode");
-      el.innerHTML=`<div class="gst">${x.foto?`<div class="gf"><img src="${esc(x.foto)}" alt="" onerror="this.parentNode.className='gf med';this.outerHTML='💌'"></div>`:`<div class="gf med">💌</div>`}<div class="gb"><b class="gn"><span>✦ ${esc(x.nama)} ✦</span>${x.hubungan?`<small>${esc(x.hubungan)}</small>`:""}</b>${x.suara?`<button class="vchip" id="vchip" data-s="loading" type="button" disabled><span class="eq"><i></i><i></i><i></i><i></i></span><span id="vtxt">Memuat suara…</span></button>`:""}<hr class="gl"><div class="gmsg">${m.map((w,k)=>`<span class="w" style="animation-name:${an};animation-delay:${k*.12+.7}s">${esc(w)}</span>`).join("")}</div></div></div>`;
-      const slideWait=m.length*120+1700+Math.max(4500,m.length*240),t0=Date.now(),abort={v:false};
+      el.innerHTML=`<div class="gst">${x.foto?`<div class="gf"><img src="${esc(x.foto)}" alt="" onerror="this.parentNode.className='gf med';this.outerHTML='💌'"></div>`:`<div class="gf med">💌</div>`}<div class="gb"><b class="gn"><span>✦ ${esc(x.nama)} ✦</span>${x.hubungan?`<small>${esc(x.hubungan)}</small>`:""}</b>${x.suara?`<button class="vchip" id="vchip" data-s="loading" type="button" disabled><span class="eq"><i></i><i></i><i></i><i></i></span><span id="vtxt">Memuat suara…</span></button>`:""}<hr class="gl"><div class="gmsg${pesan.length<=160?' ctr':''}">${m.map((w,k)=>`<span class="w" style="animation-name:${an};animation-delay:${(k*stp+.7).toFixed(2)}s">${esc(w)}</span>`).join("")}</div></div></div>`;
+      fitGuest();setTimeout(fitGuest,400);
+      /* lama tampil mengikuti panjang kalimat (tanpa suara); dengan rekaman suara: sampai rekaman selesai */
+      const slideWait=Math.max(5000,Math.min(24000,3500+pesan.length*70),(.7+m.length*stp+.9)*1000+2200),t0=Date.now(),abort={v:false};
       if(x.suara){
         const jalan=async manual=>{ // manual = diketuk pengguna
           chip("loading","Memuat suara…");
@@ -299,7 +385,7 @@ async function scenes(){
             v.done.then(()=>{if(!abort.v){chip("done","Suara selesai");duck(false)}});return v}
           catch(e){console.warn("Suara tidak bisa diputar:",e);chip("fail","Ketuk untuk memutar suara 🔊",()=>jalan(true));duck(false);return null}};
         const v=await Promise.race([jalan(false),wait(20000).then(()=>"timeout")]);
-        if(v&&v!=="timeout")await Promise.all([wait(Math.max(0,slideWait-(Date.now()-t0))),Promise.race([v.done,wait(80000)])]);
+        if(v&&v!=="timeout"){await Promise.race([v.done,wait(80000)]);await wait(1500);const sisa=3500-(Date.now()-t0);if(sisa>0)await wait(sisa)}
         else await wait(Math.max(slideWait-(Date.now()-t0),3500)+(v==="timeout"?0:3000));
         abort.v=true;stopVoice();duck(false);setVS("")
       }else await wait(slideWait);
@@ -317,12 +403,16 @@ $("buka").onclick=()=>{
   const sl=$("slot");if(sl)sl.replaceWith($("rb"));
   const sh=$("show");sh.style.display="block";requestAnimationFrame(()=>sh.classList.add("on"));
   const v=$("bg"),vb=$("bgb"),photo=()=>{v.style.display=vb.style.display="none";if(FOTO.length)$("kb").style.display=$("kbb").style.display="block"};
-  if(VID){v.src=vb.src=VID;v.muted=!C.videoSuara;vb.muted=true;v.style.display=vb.style.display="block";
-    v.onerror=photo;v.play().catch(()=>{});vb.play().catch(()=>{})}
+  if(VID){
+    const mulai=src=>{v.src=vb.src=src;v.muted=!C.videoSuara;vb.muted=true;v.style.display=vb.style.display="block";$("kb").style.display=$("kbb").style.display="none";
+      v.onerror=()=>{console.warn("video tidak bisa diputar (format/codec?)");photo()};v.play().catch(()=>{});vb.play().catch(()=>{})};
+    if(Suara.driveId(VID)){photo();Suara.blobUrlBagi(VID).then(bu=>{VID=bu;mulai(bu)}).catch(e=>console.warn("video Drive gagal dimuat:",e&&e.message))}
+    else mulai(VID)}
   else if(C.latar!="polos")photo();
   if(ML.length){mi=0;au.loop=ML.length<2;au.onended=()=>{mi=(mi+1)%ML.length;load();au.play().catch(()=>{})};
     load();baseVol=VID&&C.videoSuara?.25:1;au.volume=baseVol;au.play().catch(()=>{});
     $("mute").style.display="inline-block";$("lagu").style.display=ML.length>1?"inline-block":"none"}
+  tickOn=true;tickNext();
   setTimeout(scenes,1200);auto()};
 
 /* ---- konfeti (ikut tema, bisa dimatikan dari admin) ---- */
