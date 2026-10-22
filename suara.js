@@ -14,6 +14,13 @@
   async function timed(url,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
     try{return await fetch(url,{signal:c.signal})}finally{clearTimeout(t)}}
   const cache=new Map();
+  /* simpanan permanen di browser (Cache Storage): suara yang sudah pernah dimuat tidak diunduh lagi */
+  const CN="suara-v1",ck=k=>"https://suara.local/"+encodeURIComponent(k);
+  async function lokalAmbil(k){try{if(!window.caches)return null;const c=await caches.open(CN),r=await c.match(ck(k));
+    if(!r)return null;return {buf:await r.arrayBuffer(),mime:r.headers.get("content-type")||"audio/wav"}}catch(e){return null}}
+  async function lokalSimpan(k,o){try{if(!window.caches)return;const c=await caches.open(CN);
+    await c.put(ck(k),new Response(o.buf.slice(0),{headers:{"content-type":o.mime||"audio/wav"}}));
+    const ks=await c.keys();for(let i=0;i<ks.length-30;i++)await c.delete(ks[i])}catch(e){}}
   /* -> Promise<{buf:ArrayBuffer,mime:string}> (di-cache per file) */
   function ambil(raw){
     const key=driveId(raw)||direct(raw);if(!key)return Promise.reject(new Error("URL suara tidak valid"));
@@ -21,10 +28,11 @@
     const id=driveId(raw);
     const p=(async()=>{
       let err=null;
-      if(id&&SU){for(let k=0;k<2;k++){
-        try{const r=await timed(SU+(SU.includes("?")?"&":"?")+"action=audio&id="+encodeURIComponent(id)+"&t="+Date.now(),45000);
+      const simpan=await lokalAmbil(key);if(simpan)return simpan; /* sudah pernah diunduh di HP ini -> langsung */
+      if(id&&SU){for(let k=0;k<4;k++){
+        try{const r=await timed(SU+(SU.includes("?")?"&":"?")+"action=audio&id="+encodeURIComponent(id)+"&t="+Date.now(),k?30000:20000);
           const d=await r.json();if(!d.ok)throw new Error(d.error||"gagal");
-          return {buf:b64(d.data),mime:d.mime||"audio/wav"}}catch(e){err=e;await new Promise(r=>setTimeout(r,700))}}}
+          const o={buf:b64(d.data),mime:d.mime||"audio/wav"};lokalSimpan(key,o);return o}catch(e){err=e;await new Promise(r=>setTimeout(r,600+k*700))}}}
       try{const r=await timed(direct(raw),30000);if(!r.ok)throw new Error("HTTP "+r.status);
         return {buf:await r.arrayBuffer(),mime:r.headers.get("content-type")||"audio/wav"}}catch(e){throw err||e}
     })();

@@ -184,7 +184,7 @@ $("p").onchange=async e=>{const f=e.target.files[0];foto="";$("pv").hidden=true;
   try{foto=await resize(f);$("pv").src=foto;$("pv").hidden=false;st("")}
   catch(x){st("Foto tidak bisa dibaca, coba foto lain.","err")}};
 
-/* ---------- konversi suara -> WAV mono (diputar di semua HP, termasuk iPhone) ---------- */
+/* ---------- konversi suara -> MP3 mono ringan (diputar di semua HP, termasuk iPhone); cadangan: WAV ---------- */
 function encWav(f32,rate){const n=f32.length,b=new ArrayBuffer(44+n*2),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
   w(0,"RIFF");v.setUint32(4,36+n*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
   v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,n*2,true);
@@ -192,6 +192,26 @@ function encWav(f32,rate){const n=f32.length,b=new ArrayBuffer(44+n*2),v=new Dat
   const g=peak>.0005?Math.min(3,.92/peak):1; // normalisasi lembut supaya suara pelan tetap jelas
   for(let i=0;i<n;i++){const s=Math.max(-1,Math.min(1,f32[i]*g));v.setInt16(44+i*2,s<0?s*32768:s*32767,true)}
   return new Blob([b],{type:"audio/wav"})}
+/* MP3 mono 32 kbps (~4 KB per detik, kira-kira 8x lebih kecil dari WAV) -> cepat dimuat di HP penerima.
+   Memakai lame.min.js (satu folder dengan halaman ini). Jika gagal dimuat, otomatis kembali ke WAV. */
+let lameP=null;
+function loadLame(){if(window.lamejs)return Promise.resolve();
+  if(!lameP)lameP=new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="lame.min.js";sc.onload=()=>window.lamejs?ok():no(new Error("lame"));sc.onerror=()=>no(new Error("lame"));document.head.append(sc)});
+  return lameP.catch(e=>{lameP=null;throw e})}
+function encMp3(f32,rate){
+  let peak=0;for(let i=0;i<f32.length;i++){const a=Math.abs(f32[i]);if(a>peak)peak=a}
+  const g=peak>.0005?Math.min(3,.92/peak):1,n=f32.length,pcm=new Int16Array(n);
+  for(let i=0;i<n;i++){const v=Math.max(-1,Math.min(1,f32[i]*g));pcm[i]=v<0?v*32768:v*32767}
+  const enc=new lamejs.Mp3Encoder(1,rate,32),out=[];
+  for(let i=0;i<n;i+=1152){const c=enc.encodeBuffer(pcm.subarray(i,i+1152));if(c.length)out.push(new Uint8Array(c))}
+  const e=enc.flush();if(e.length)out.push(new Uint8Array(e));
+  return new Blob(out,{type:"audio/mpeg"})}
+async function render(buf,rate){
+  const OC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+  const len=Math.max(1,Math.ceil(Math.min(buf.duration,MAXSEC)*rate)),oc=new OC(1,len,rate),s=oc.createBufferSource();
+  s.buffer=buf;s.connect(oc.destination);s.start(0);
+  const out=await new Promise((ok,no)=>{const p=oc.startRendering();if(p&&p.then)p.then(ok,no);else oc.oncomplete=e=>ok(e.renderedBuffer)});
+  return out.getChannelData(0)}
 async function toWav(blob){
   const AC=window.AudioContext||window.webkitAudioContext,OC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
   if(!AC||!OC)throw new Error("no-webaudio");
@@ -199,12 +219,11 @@ async function toWav(blob){
   const buf=await new Promise((ok,no)=>{const p=ctx.decodeAudioData(arr,ok,no);if(p&&p.catch)p.catch(no)});
   try{ctx.close()}catch(e){}
   if(buf.duration>MAXSEC+1.5)throw new Error("terlalu-panjang");
+  const dur=Math.min(buf.duration,MAXSEC);
+  try{await loadLame();const mp3=encMp3(await render(buf,22050),22050);if(mp3.size>1000)return {blob:mp3,dur}}catch(e){console.warn("MP3 gagal, pakai WAV:",e&&e.message)}
   let last=null;
   for(const rate of [16000,22050,44100]){
-    try{const len=Math.max(1,Math.ceil(Math.min(buf.duration,MAXSEC)*rate)),oc=new OC(1,len,rate),s=oc.createBufferSource();
-      s.buffer=buf;s.connect(oc.destination);s.start(0);
-      const out=await new Promise((ok,no)=>{const p=oc.startRendering();if(p&&p.then)p.then(ok,no);else oc.oncomplete=e=>ok(e.renderedBuffer)});
-      return {blob:encWav(out.getChannelData(0),rate),dur:Math.min(buf.duration,MAXSEC)}}catch(e){last=e}}
+    try{return {blob:encWav(await render(buf,rate),rate),dur}}catch(e){last=e}}
   throw last||new Error("gagal-konversi")}
 async function siapkan(blob,sec){
   $("hint").textContent="Mengoptimalkan suara…";

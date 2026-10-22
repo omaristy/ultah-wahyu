@@ -391,9 +391,10 @@ async function playVoice(x,abort){
     const done=new Promise(r=>src.onended=r);src.start();
     const stop=()=>{try{src.onended=null;src.stop()}catch(e){}};curStop=stop;return {done,stop,via:"wa"}}}
 /* prefetch: unduh suara lebih dulu supaya langsung terputar saat gilirannya */
-let pfChain=Promise.resolve(),pfDone=new Set();
-function prefetch(){ITEMS.filter(x=>x.suara).slice(-14).forEach(x=>{if(pfDone.has(x.suara))return;pfDone.add(x.suara);
-  pfChain=pfChain.then(()=>Suara.ambil(x.suara)).catch(()=>{pfDone.delete(x.suara)})})}
+const pfDone=new Set(),pfQ=[];let pfRun=0;
+function pfPump(){while(pfRun<3&&pfQ.length){const x=pfQ.shift();pfRun++;
+  Suara.ambil(x.suara).catch(()=>pfDone.delete(x.suara)).finally(()=>{pfRun--;pfPump()})}}
+function prefetch(){ITEMS.filter(x=>x.suara).slice(-14).forEach(x=>{if(pfDone.has(x.suara))return;pfDone.add(x.suara);pfQ.push(x)});pfPump()}
 
 /* ---- ucapan otomatis (ucapan utama + ucapan teman) ---- */
 function chip(state,txt,fn){const c=$("vchip");if(!c)return;c.dataset.s=state;$("vtxt").textContent=txt;c.onclick=fn||null;
@@ -419,7 +420,11 @@ async function scenes(){
           try{const v=await playVoice(x,abort);if(!v)return null;duck(true);chip("playing","Suara dari "+x.nama,()=>{});
             v.done.then(()=>{if(!abort.v){chip("done","Suara selesai");duck(false)}});return v}
           catch(e){console.warn("Suara tidak bisa diputar:",e);chip("fail","Ketuk untuk memutar suara 🔊",()=>jalan(true));duck(false);return null}};
-        const v=await Promise.race([jalan(false),wait(20000).then(()=>"timeout")]);
+        /* sabar menunggu suara (sampai 60 dtk) & otomatis mencoba lagi bila gagal, supaya tidak "senyap" */
+        let v=null;const tutup=Date.now()+60000;
+        while(!abort.v&&Date.now()<tutup){
+          const r=await Promise.race([jalan(false),wait(Math.max(1,tutup-Date.now())).then(()=>"timeout")]);
+          if(r==="timeout"){v=r;break}if(r){v=r;break}await wait(2500)}
         if(v&&v!=="timeout"){await Promise.race([v.done,wait(80000)]);await wait(1500);const sisa=3500-(Date.now()-t0);if(sisa>0)await wait(sisa)}
         else await wait(Math.max(slideWait-(Date.now()-t0),3500)+(v==="timeout"?0:3000));
         abort.v=true;stopVoice();duck(false);setVS("")
