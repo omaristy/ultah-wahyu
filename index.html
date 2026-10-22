@@ -131,6 +131,24 @@ body:has(#show.gmode) canvas#cf{z-index:2}  /* saat slide teman: konfeti di bela
   .gmsg{font-size:clamp(18px,1.9vw,34px)}
 }
 @media (max-height:480px) and (min-aspect-ratio:1/1){.gb{padding:14px 22px}.gf img{max-height:58vh}}
+/* ---- perbaikan: kartu teman selalu muat di layar; hanya area teks yang menggulir bila terlalu panjang ---- */
+#show.gmode .stage{padding:max(44px,env(safe-area-inset-top)) 14px max(58px,env(safe-area-inset-bottom));box-sizing:border-box;overflow:hidden}
+#show.gmode .line{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;align-content:normal}
+.gst{--av:calc(100dvh - 110px);max-height:var(--av);min-height:0;align-items:center}
+.gf{max-width:100%;max-height:100%;min-height:0}
+.gf img{max-width:min(64vw,330px);max-height:var(--fh);object-fit:contain}
+.gb{min-height:0;max-height:100%;overflow:hidden}
+.gb>.gn,.gb>.vchip,.gb>.gl{flex:none}
+.gn,.gn span{max-width:100%;overflow-wrap:anywhere}
+.gmsg{flex:1 1 auto;min-height:0;max-height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;align-content:flex-start;width:100%;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 10px,#000 calc(100% - 22px),transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 10px,#000 calc(100% - 22px),transparent 100%);padding:6px 0 14px}
+.gmsg::-webkit-scrollbar{display:none}
+.gmsg.ctr{align-content:center}
+@media (min-aspect-ratio:1/1){
+  .gst{--av:calc(100dvh - 100px);align-items:center}
+  .gb{align-self:stretch;max-height:100%}
+  .gmsg{max-height:100%}
+}
 .tp{position:fixed;top:54px;left:10px;right:10px;max-width:480px;max-height:68vh;overflow:auto;z-index:7;display:none;padding:12px;border-radius:18px;border:1px solid var(--ac);background:color-mix(in srgb,var(--b1) 94%,transparent);backdrop-filter:blur(14px)}
 .tp.open{display:block}
 .tp h4{color:var(--ac);font:500 12px Poppins;letter-spacing:2px;text-transform:uppercase;margin:12px 4px 4px}
@@ -304,16 +322,33 @@ async function boot(){
 function fitGuest(){
   const box=document.querySelector("#line .gst");if(!box)return;
   const msg=box.querySelector(".gmsg");if(!msg)return;
-  const W=innerWidth,H=innerHeight,land=W/H>=1,avail=H-(W<700?140:120);
+  const W=innerWidth,H=innerHeight,land=W/H>=1;
   const n=(msg.textContent||"").length;
+  box.style.setProperty("--av",(H-(land?100:110))+"px");
   let fs=land?Math.max(18,Math.min(40,W*.024)):Math.max(17,Math.min(30,W*.062));
   fs*=n<=60?1.2:n<=140?1.05:n<=260?.9:.8;
   let fh=land?64:30;
+  const over=()=>msg.scrollHeight>msg.clientHeight+2;
   msg.style.fontSize=fs.toFixed(1)+"px";box.style.setProperty("--fh",fh+"vh");
-  for(let k=0;k<80&&box.offsetHeight>avail;k++){
-    if(fs>14){fs-=1;msg.style.fontSize=fs+"px"}
-    else if(fh>14){fh-=2;box.style.setProperty("--fh",fh+"vh")}
-    else break}}
+  /* kecilkan huruf dulu sampai batas nyaman (16px), lalu foto sampai 20vh; sisanya digulir otomatis */
+  for(let k=0;k<80&&over();k++){
+    if(fs>16){fs-=1;msg.style.fontSize=fs+"px"}
+    else if(fh>(land?30:20)){fh-=3;box.style.setProperty("--fh",fh+"vh")}
+    else break}
+  autoScroll(msg)}
+/* teks yang masih lebih tinggi dari kotaknya digulir pelan-pelan agar terbaca semua */
+let scrollRAF=0;
+const scrollExtra=m=>Math.max(0,m.scrollHeight-m.clientHeight);
+function autoScroll(msg){
+  cancelAnimationFrame(scrollRAF);msg.scrollTop=0;
+  let stop=false;const halt=()=>{stop=true};
+  msg.addEventListener("touchstart",halt,{once:true,passive:true});msg.addEventListener("wheel",halt,{once:true,passive:true});
+  const ex=scrollExtra(msg);if(ex<=2)return;
+  const speed=22,delay=2200,dur=ex/speed*1000;let t0=0;
+  const step=t=>{if(stop||!msg.isConnected)return;if(!t0)t0=t;
+    const e=t-t0-delay;if(e>0)msg.scrollTop=Math.min(ex,e/1000*speed);
+    if(e<dur)scrollRAF=requestAnimationFrame(step)};
+  scrollRAF=requestAnimationFrame(step)}
 addEventListener("resize",()=>fitGuest());
 
 const au=$("au");let auFb="";
@@ -375,9 +410,9 @@ async function scenes(){
       const x=Q.shift();shown.add(gkey(x));gi++;const pesan=cut(x.pesan,500),m=pesan.split(" "),stp=Math.min(.12,4/Math.max(1,m.length));
       el.className="line";$("show").classList.add("gmode");
       el.innerHTML=`<div class="gst">${x.foto?`<div class="gf"><img src="${esc(x.foto)}" alt="" onerror="this.parentNode.className='gf med';this.outerHTML='💌'"></div>`:`<div class="gf med">💌</div>`}<div class="gb"><b class="gn"><span>✦ ${esc(x.nama)} ✦</span>${x.hubungan?`<small>${esc(x.hubungan)}</small>`:""}</b>${x.suara?`<button class="vchip" id="vchip" data-s="loading" type="button" disabled><span class="eq"><i></i><i></i><i></i><i></i></span><span id="vtxt">Memuat suara…</span></button>`:""}<hr class="gl"><div class="gmsg${pesan.length<=160?' ctr':''}">${m.map((w,k)=>`<span class="w" style="animation-name:${an};animation-delay:${(k*stp+.7).toFixed(2)}s">${esc(w)}</span>`).join("")}</div></div></div>`;
-      fitGuest();setTimeout(fitGuest,400);
+      fitGuest();setTimeout(fitGuest,400);setTimeout(fitGuest,1500);
       /* lama tampil mengikuti panjang kalimat (tanpa suara); dengan rekaman suara: sampai rekaman selesai */
-      const slideWait=Math.max(5000,Math.min(24000,3500+pesan.length*70),(.7+m.length*stp+.9)*1000+2200),t0=Date.now(),abort={v:false};
+      const gm=el.querySelector('.gmsg'),extra=gm?scrollExtra(gm):0,slideWait=Math.max(5000,Math.min(24000,3500+pesan.length*70),(.7+m.length*stp+.9)*1000+2200,extra?extra/22*1000+5000:0),t0=Date.now(),abort={v:false};
       if(x.suara){
         const jalan=async manual=>{ // manual = diketuk pengguna
           chip("loading","Memuat suara…");
