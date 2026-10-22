@@ -432,7 +432,19 @@ async function scenes(){
     el.classList.add("out");await wait(1000);g=!g}}
 
 /* ---- buka -> pertunjukan ---- */
+/* tiap kali link dibuka & tombol "Buka Ucapan" ditekan, kiriman teman tampil lagi (sekali per pembukaan) */
+function resetTeman(){shown.clear();tickSeen.clear();tickShow=[];clearTimeout(tickT)}
+/* halaman lama yang dipulihkan browser (bfcache / tab di-restore / kembali setelah lama ditinggal) dimuat ulang
+   supaya kembali ke layar "Buka Ucapan" dengan keadaan bersih */
+addEventListener("pageshow",e=>{if(e.persisted)location.reload()});
+let hiddenAt=0;
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){hiddenAt=Date.now();return}
+  if(hiddenAt&&Date.now()-hiddenAt>30000&&document.body.classList.contains("playing"))location.reload();
+  hiddenAt=0});
 $("buka").onclick=()=>{
+  resetTeman();
+  if(SU)api("action=list").then(d=>{if(d&&d.ok){ITEMS=d.items.map(norm);ribbon();tickNext();prefetch()}}).catch(()=>{});
   unlockAudio();document.body.classList.add("playing");
   $("cover").style.opacity=0;setTimeout(()=>$("cover").style.display="none",900);
   const sl=$("slot");if(sl)sl.replaceWith($("rb"));
